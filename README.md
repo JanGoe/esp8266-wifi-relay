@@ -1,56 +1,60 @@
+# ESP8266 Wiki Relay
 
+## Installation
 
-Zum „Debuggen“ bitte GND,RX,TX mit TTL-USB Adapter verbinden, und L,N oben Links anschließen
-VORSICHT SOBALD L/N ( ~230V ) Angeschlossen SIND und Strom drauf ist platine nicht mehr berühren! 
-Sobald Spannung drauf ist sollte der ESP8266 auf der Rückseite der Platine starten und Blau leuchten, 
-jetzt habt ihr die möglichkeit die eigentliche Software auf dem ESP8266 zu „Speichern“  
+![Anschluss](/anschluss.png?raw=true)
 
-Dazu bitte die init.lua öffen ( LINK: https://drive.google.com/file/d/0ByLsbjUPhHlycGx1UG9objRaZVE/view?usp=sharing )  und die W-Lan daten anpassen ( siehe bild Grüner Kasten ) anschliesen auf „Save“ drücken ( siehe bild Roter Kasten ) jetzt sollte das programm auf den ESP8266 übertragen werden und es wird im LINKEN fenster die IP vom ESP8266 angezeigt 
-Um jetzt aus der „ferne“ die relays zu steuern könnt ihr jetzt z.b. in SHC einen Schalterserver eintragen mit dieser ip und port 9274 ( gpios lesen JA, gpios schreiben JA also Model am besten Arduino Nano ) 
+Zum "Debuggen" bitte **GND**, **RX**, **TX** mit [TTL-USB Adapter](http://www.elecfreaks.com/wiki/index.php?title=USB_to_RS232_Converter) verbinden, und **L**, **N** oben Links anschließen.
 
-Nun könnt ihr unter Schaltfunktionen Ausgänge anlegen ( als Schalterserver den eben erstellen auswählen und als gpio 4/5 )  
-Sollte ihr an der platine einen taster/schalter anschliesen wollen bitte dafür
-GND/GPIO12
-GND/GPIO13 nutzen ( schaltet nach GND ) 
+```
 
-Damit in SHC auch die rückmeldung funktioniert wenn man „Manuel“ einschalter, muss in der LUA datei noch etwas angepasst werden
-In zeile 6 und 8 bitte die IP eintragen wo shc läuft 
+VORSICHT - Sobald L/N (~230V) angeschlossen sind und Netzspannung anliegt, die Platine nicht mehr berühren!
 
-In zeile 127,132,140,144,155,159,167,171 bitte „SID“ anpassen  ( die SID findet ihr wenn ihr euch mit putty einlogt in das verzeichnis /var/www/shc geht und dort ein „php index.php app=shc -sw –l“ eingebt jetzt wird euch eine liste mit allen schaltbaren elementen angezeigt die SID jetzt bitte im LUA script anpassen
+```
+## Konfiguration
 
-Wollt ihr die platine nicht mit SHC betreiben kann diese natürlich auch über simple TCP befehle gesteuert werden am einfachten dazu folgenden php script verwenden:
-https://drive.google.com/file/d/0ByLsbjUPhHlyanphNnRETnBTODQ/view?usp=sharing
+Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und Blau leuchten, jetzt habt ihr die Möglichkeit die eigentliche Software ([init.lua](/init.lua)) auf dem ESP8266 zu "Speichern".
 
-php-script nutzung
-befehl: php tcp.php 192.168.0.36 2x4x1
-dieser befehl würde relay1 schalten auf AN
+Dazu bitte die [init.lua](/init.lua) öffen ([alternativer Download](https://drive.google.com/file/d/0ByLsbjUPhHlycGx1UG9objRaZVE/view?usp=sharing)), die WLAN Daten anpassen und die Datei mit dem [ESPExplorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren.
 
-befehl: php tcp.php 192.168.0.36 2x4x0
-dieser befehl würde relay1 schalten auf AUS
+## SHC Schaltserver
 
-mit `php tcp.php 192.168.0.36 3x4` kann man den status vom relay abfragen antwort wäre 1/0
+Um aus der "Ferne" die Relais zu steuern, hat man die Möglichkeit in [SHC](http://rpi-controlcenter.de/) einen Schalterserver eintragen mit der IP des WIFI-Relais und Port 9274 ( GPIO lesen JA, GPIO schreiben JA - geeignetes Model z.B. Arduino Nano ) 
 
-anstelle von pin 4 kann man bei der 2fach version auch pin5 verwenden
-mit php tcp.php 192.168.0.36 0x0 kann man den esp8266 neustarten  
+Nun kann man unter *Schaltfunktionen* Ausgänge anlegen ( als Schalterserver den neu erstellen auswählen und als GPIO 4/5 )  
+Wollt ihr an der Platine einen Taster/Schalter anschliesen, bitte dafür **GND / GPIO12** und  **GND / GPIO13** nutzen ( schaltet nach **GND** ) 
 
+Damit in SHC auch die Rückmeldung funktioniert, wenn man manuel schaltet, muss in der [init.lua](/init.lua) noch folgendes angepasst werden:
 
-möchte man rückmeldungen vom Manuelen schalten auswerten geht dies via HTTP ( der esp8266 sendet eine http-anfrage an eine gewünschte seite dazu bitte die zeilen ( im lua script ) 6,8 und 127,132,140,144,155,159,167,171 anpassen
+- In Zeile 6 und 8 bitte die IP eintragen wo **SHC** installiert ist 
+- In Zeile 127, 132, 140, 144, 155, 159, 167, 171 bitte **SID** anpassen  ( die SID findet ihr. wenn ihr euch mit Putty einloggt, in das Verzeichnis `/var/www/shc` geht und dort ein `php index.php app=shc -sw –l` eingebt. Nun wird euch eine Liste mit allen schaltbaren Elementen angezeigt, die SID jetzt bitte im [init.lua](/init.lua) anpassen
 
+## Alternative Steuerung
 
-bsp für openhab ( benötigt php auf dem openhab hostsystem und das exec binding )
+Wer die Platine nicht mit SHC betreiben möchte, kann diese natürlich auch über einfache TCP Befehle steuern.
+
+### PHP Script ([tcp.php](/tcp.php))
+
+Befehl: `php tcp.php 192.168.0.36 2x4x1`
+Dieses Kommando schaltet **relay1** auf **AN**
+
+Befehl: `php tcp.php 192.168.0.36 2x4x0`
+Dieses Kommando schaltet **relay1** auf **AUS**
+
+Mit `php tcp.php 192.168.0.36 3x4` kann man den status vom relay abfragen antwort wäre `1/0`.
+
+Anstelle von **PIN 4* kann man bei der 2-fach Version auch **PIN 5** verwenden.
+Mit `php tcp.php 192.168.0.36 0x0` kann man den ESP8266 neustarten.
+
+### HTTP Rückmeldung
+
+Möchte man Rückmeldungen vom manuellen Schalten auswerten geht dieses via HTTP ( der ESP8266 sendet einen HTTP-GET-REQUEST an eine gewünschte Seite - dazu bitte die Zeilen ([init.lua](/init.lua)) 6, 8, 127, 132, 140, 144, 155, 159, 167, 171 anpassen.
+
+### OpenHab
+
+Beispiel für OpenHab ( Benötigt PHP auf dem OpenHab Host und das EXEC Binding )
 
 items datei
 
-Switch schalter "Lampe1" {exec=">[ON:php /var/www/tcp.php 192.168.0.62 2x3x1] >[OFF:php /var/www/tcp.php 192.168.0.62 2x3x0]"}
-Auch hier für rückmeldungen bitte die OPENHAB REST-API nutzen und die zeilen 6,8 und 127,132,140,144,155,159,167,171 anpassen
-
-
-
-
-
-
-
-
-
-
-
+Switch Schalter **Lampe1** `{exec=">[ON:php /var/www/tcp.php 192.168.0.62 2x3x1] >[OFF:php /var/www/tcp.php 192.168.0.62 2x3x0]"}`
+Auch hier für Rückmeldungen bitte die OpenHab REST-API nutzen und die zeilen 6, 8, 127, 132, 140, 144, 155, 159, 167, 171 anpassen.
