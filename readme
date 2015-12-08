@@ -28,8 +28,7 @@ dieser befehl würde relay1 schalten auf AN
 befehl: php tcp.php 192.168.0.36 2x4x0
 dieser befehl würde relay1 schalten auf AUS
 
-mit php tcp.php 192.168.0.36 3x4 
-kann man den status vom relay abfragen antwort wäre 1/0
+mit ```php tcp.php 192.168.0.36 3x4``` kann man den status vom relay abfragen antwort wäre 1/0
 
 anstelle von pin 4 kann man bei der 2fach version auch pin5 verwenden
 mit php tcp.php 192.168.0.36 0x0 kann man den esp8266 neustarten  
