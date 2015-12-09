@@ -61,3 +61,10 @@ items datei
 
 Switch Schalter **Lampe1** `{exec=">[ON:php /var/www/tcp.php 192.168.0.62 2x3x1] >[OFF:php /var/www/tcp.php 192.168.0.62 2x3x0]"}`
 Auch hier für Rückmeldungen bitte die OpenHab REST-API nutzen und die zeilen 6, 8, 127, 132, 140, 144, 155, 159, 167, 171 anpassen.
+
+## Sonstige Informationen
+
+Platinen Maße
+48mm breit ( stark abgerundete ecken )
+48mm lang
+21mm tief
