@@ -15,11 +15,13 @@ VORSICHT - Sobald L/N (~230V) angeschlossen sind und Netzspannung anliegt, die P
 
 Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und Blau leuchten, jetzt habt ihr die Möglichkeit die eigentliche Software ([init.lua](/init.lua)) auf dem ESP8266 zu "Speichern".
 
-Dazu bitte die [init.lua](/init.lua) öffen ([alternativer Download](https://drive.google.com/file/d/0ByLsbjUPhHlycGx1UG9objRaZVE/view?usp=sharing)), die WLAN Daten anpassen und die Datei mit dem [ESPExplorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren.
+
+Dazu bitte die [init.lua](/init.lua) öffen ([alternativer Download](https://drive.google.com/file/d/0ByLsbjUPhHlycGx1UG9objRaZVE/view?usp=sharing)), die WLAN Daten anpassen und die Datei mit dem [ESPlorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren ( über Save im ESPlorer ), ist das erfolgreich wird im ESPlorer, der TCP-Server gestartet und es wird die IP vom esp8266 angezeigt
+
 
 ## SHC Schaltserver
 
-Um aus der "Ferne" die Relais zu steuern, hat man die Möglichkeit in [SHC](http://rpi-controlcenter.de/) einen Schalterserver eintragen mit der IP des WIFI-Relais und Port 9274 ( GPIO lesen JA, GPIO schreiben JA - geeignetes Model z.B. Arduino Nano ) 
+Um aus der "Ferne" die Relais zu steuern, hat man die Möglichkeit in [SHC](http://rpi-controlcenter.de/) einen Schalterserver einzutragen mit der IP des WIFI-Relais und Port 9274 ( GPIO lesen JA, GPIO schreiben JA - geeignetes Model z.B. Arduino Nano ) 
 
 Nun kann man unter *Schaltfunktionen* Ausgänge anlegen ( als Schalterserver den neu erstellen auswählen und als GPIO 4/5 )  
 Wollt ihr an der Platine einen Taster/Schalter anschliesen, bitte dafür **GND / GPIO12** und  **GND / GPIO13** nutzen ( schaltet nach **GND** ) 
@@ -44,6 +46,7 @@ Dieses Kommando schaltet **relay1** auf **AUS**
 Mit `php tcp.php 192.168.0.36 3x4` kann man den status vom relay abfragen antwort wäre `1/0`.
 
 Anstelle von **PIN 4* kann man bei der 2-fach Version auch **PIN 5** verwenden.
+
 Mit `php tcp.php 192.168.0.36 0x0` kann man den ESP8266 neustarten.
 
 ### HTTP Rückmeldung
