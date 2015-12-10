@@ -37,15 +37,15 @@ Wer die Platine nicht mit SHC betreiben möchte, kann diese natürlich auch übe
 
 ### PHP Script ([tcp.php](/tcp.php))
 
-| Befehl  | Beschreibung |
-| ------------- | ------------- |
-| `php tcp.php 192.168.0.62 2x4x1` | Dieses Kommando schaltet **Relais 1** auf **AN** |
-| `php tcp.php 192.168.0.62 2x4x0` | Dieses Kommando schaltet **Relais 1** auf **AUS** |
-| `php tcp.php 192.168.0.62 3x4` | Status vom **Relais 1** abfragen: Antwort `1/0` |
-| `php tcp.php 192.168.0.62 2x5x1` | Dieses Kommando schaltet **Relais 2** auf **AN** |
-| `php tcp.php 192.168.0.62 2x5x0` | Dieses Kommando schaltet **Relais 2** auf **AUS** |
-| `php tcp.php 192.168.0.62 3x5` | Status vom **Relais 2** abfragen: Antwort `1/0` |
-| `php tcp.php 192.168.0.62 0x0` | ESP8266 neustarten |
+| Befehl  | Beschreibung | Antwort |
+| ------------- | ------------- | ------------- |
+| `php tcp.php 192.168.0.62 2x4x1` | Dieses Kommando schaltet **Relais 1** auf **AN** | |
+| `php tcp.php 192.168.0.62 2x4x0` | Dieses Kommando schaltet **Relais 1** auf **AUS** | |
+| `php tcp.php 192.168.0.62 3x4` | Status vom **Relais 1** abfragen | `1/0` |
+| `php tcp.php 192.168.0.62 2x5x1` | Dieses Kommando schaltet **Relais 2** auf **AN** | |
+| `php tcp.php 192.168.0.62 2x5x0` | Dieses Kommando schaltet **Relais 2** auf **AUS** | |
+| `php tcp.php 192.168.0.62 3x5` | Status vom **Relais 2** abfragen | `1/0` |
+| `php tcp.php 192.168.0.62 0x0` | ESP8266 neustarten | |
 
 *192.168.0.62 ist im obigen Beispiel die IP Adresse des ESP8266*
 
