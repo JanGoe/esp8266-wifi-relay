@@ -37,7 +37,7 @@ p2 = 1
 
 lampe1 = 0 -- 0 = aus
 lampe2 = 0
--- config für gpios!
+-- config fÃ¼r gpios!
 gpio.mode(6, gpio.HIGH)
 gpio.write(6, gpio.HIGH)
 gpio.mode(7, gpio.HIGH)
@@ -117,7 +117,7 @@ status2 = gpio.read(5)
 
 --print(schalter1)
 
--- für schalter1 
+-- fÃ¼r schalter1 
 if(schalter1 == 0 and p1 ~= schalter1) then
 p1 = 0
 --print("debug if 1")
@@ -144,8 +144,8 @@ p1 = 1
         send_to_visu("/shc/index.php?app=shc&a&ajax=executeswitchcommand&sid=20&command=" ..status1)
     end
 end
--- end für schalter 1
--- für schalter2
+-- end fÃ¼r schalter 1
+-- fÃ¼r schalter2
 if(schalter2 == 0 and p2 ~= schalter2) then
 p2 = 0
 --print("debug2 if 1")
@@ -171,9 +171,9 @@ p2 = 1
         send_to_visu("/shc/index.php?app=shc&a&ajax=executeswitchcommand&sid=21&command=" ..status2)
     end
 end
--- end für schalter 2
+-- end fÃ¼r schalter 2
 
---- für relays schalten
+--- fÃ¼r relays schalten
 if(lampe1 == 1) then
 gpio.write(relay1,gpio.LOW)
 --print("s1 low")
@@ -189,7 +189,6 @@ gpio.write(relay2,gpio.LOW)
 end
 if(lampe2 == 0) then
 gpio.write(relay2,gpio.HIGH)
---print("s2 high")
 end
     
 -- end tmr funktion
