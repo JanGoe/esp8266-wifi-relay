@@ -4,7 +4,7 @@
 
 ![Anschluss](/anschluss.png?raw=true)
 
-Zum "Debuggen" bitte **GND**, **RX**, **TX** mit [TTL-USB Adapter](http://www.elecfreaks.com/wiki/index.php?title=USB_to_RS232_Converter) verbinden, und **L**, **N** oben Links anschließen.
+Zum "Debuggen" bitte **GND**, **RX**, **TX** mit einem [TTL-USB Adapter](http://www.elecfreaks.com/wiki/index.php?title=USB_to_RS232_Converter) verbinden, und **L**, **N** oben Links anschließen.
 
 ```
 
@@ -15,9 +15,7 @@ VORSICHT - Sobald L/N (~230V) angeschlossen sind und Netzspannung anliegt, die P
 
 Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und Blau leuchten, jetzt habt ihr die Möglichkeit die eigentliche Software ([init.lua](/init.lua)) auf dem ESP8266 zu "Speichern".
 
-
-Dazu bitte die [init.lua](/init.lua) öffen ([alternativer Download](https://drive.google.com/file/d/0ByLsbjUPhHlycGx1UG9objRaZVE/view?usp=sharing)), die WLAN Daten anpassen und die Datei mit dem [ESPlorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren ( über Save im ESPlorer ), ist das erfolgreich wird im ESPlorer, der TCP-Server gestartet und es wird die IP vom esp8266 angezeigt
-
+Dazu bitte die [init.lua](/init.lua) öffen, die WLAN Daten anpassen und die Datei mit dem [ESPlorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren (über *Save* im ESPlorer). Nach dem erfolgreichen Übertragen, wird automatisch der TCP-Server gestartet und es wird die IP vom ESP8266 angezeigt (rechtes Fenster).
 
 ## SHC Schaltserver
 
