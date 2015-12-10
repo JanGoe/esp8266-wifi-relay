@@ -59,7 +59,7 @@ Möchte man Rückmeldungen vom manuellen Schalten auswerten geht dieses via HTTP
 
 Beispiel für [OpenHab](http://www.openhab.org/) ( Benötigt PHP auf dem OpenHab Host und das [EXEC Binding](https://github.com/openhab/openhab/wiki/Exec-Binding) )
 
-Bitte in der Items Datei (`configurations/items`) folgendes eintragen:
+Bitte in der Items Datei (`<openhab_installation_dir>/configurations/items`) folgendes eintragen:
 
 ```
 Switch Schalter "Lampe1" {exec=">[ON:php /var/www/tcp.php 192.168.0.62 2x3x1] >[OFF:php /var/www/tcp.php 192.168.0.62 2x3x0]"}
