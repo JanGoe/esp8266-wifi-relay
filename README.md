@@ -13,9 +13,9 @@ VORSICHT - Sobald L/N (~230V) angeschlossen sind und Netzspannung anliegt, die P
 ```
 ## Konfiguration
 
-Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und Blau leuchten, jetzt habt ihr die Möglichkeit die eigentliche Software ([init.lua](/init.lua)) auf dem ESP8266 zu "Speichern".
+Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und Blau leuchten, jetzt habt ihr die Möglichkeit die eigentliche Software ([init.lua](/lua-tcp/init.lua)) auf dem ESP8266 zu "Speichern".
 
-Dazu bitte die [init.lua](/init.lua) öffen, die WLAN Daten anpassen und die Datei mit dem [ESPlorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren (über *Save* im ESPlorer). Nach dem erfolgreichen Übertragen, wird automatisch der TCP-Server gestartet und es wird die IP vom ESP8266 angezeigt (rechtes Fenster).
+Dazu bitte die [init.lua](/lua-tcp/init.lua) öffen, die WLAN Daten anpassen und die Datei mit dem [ESPlorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren (über *Save* im ESPlorer). Nach dem erfolgreichen Übertragen, wird automatisch der TCP-Server gestartet und es wird die IP vom ESP8266 angezeigt (rechtes Fenster).
 
 ![ESPlorer](/esplorer.png?raw=true)
 
@@ -25,10 +25,10 @@ Um aus der "Ferne" die Relais zu steuern, hat man die Möglichkeit in [SHC](http
 
 Nun kann man unter *Schaltfunktionen* Ausgänge anlegen ( als Schalterserver den neu erstellen auswählen und als **GPIO 4/5** )  
 
-Damit in SHC auch die Rückmeldung funktioniert, wenn manuel schaltet geschaltet wird, muss in der [init.lua](/init.lua) noch folgendes angepasst werden:
+Damit in SHC auch die Rückmeldung funktioniert, wenn manuel schaltet geschaltet wird, muss in der [init.lua](/lua-tcp/init.lua) noch folgendes angepasst werden:
 
 - In Zeile 6 und 8 bitte die IP eintragen unter der **SHC** erreichbar ist
-- In Zeile 127, 132, 140, 144, 155, 159, 167, 171 bitte **SID** anpassen  ( die SID findet ihr. wenn ihr euch mit Putty einloggt, in das Verzeichnis `/var/www/shc` geht und dort ein `php index.php app=shc -sw –l` eingebt. Nun wird euch eine Liste mit allen schaltbaren Elementen angezeigt, die SID jetzt bitte im [init.lua](/init.lua) anpassen
+- In Zeile 127, 132, 140, 144, 155, 159, 167, 171 bitte **SID** anpassen  ( die SID findet ihr. wenn ihr euch mit Putty einloggt, in das Verzeichnis `/var/www/shc` geht und dort ein `php index.php app=shc -sw –l` eingebt. Nun wird euch eine Liste mit allen schaltbaren Elementen angezeigt, die SID jetzt bitte im [init.lua](/lua-tcp/init.lua) anpassen
 
 ## Manuelle Steuerung
 
@@ -54,7 +54,7 @@ Wer die Platine nicht mit SHC betreiben möchte, kann diese natürlich auch übe
 
 ### HTTP Rückmeldung
 
-Möchte man Rückmeldungen vom manuellen Schalten auswerten geht dieses via HTTP ( der ESP8266 sendet einen HTTP-GET-REQUEST an eine gewünschte Seite - dazu bitte die Zeilen ([init.lua](/init.lua)) 6, 8, 127, 132, 140, 144, 155, 159, 167, 171 anpassen.
+Möchte man Rückmeldungen vom manuellen Schalten auswerten geht dieses via HTTP ( der ESP8266 sendet einen HTTP-GET-REQUEST an eine gewünschte Seite - dazu bitte die Zeilen ([init.lua](/lua-tcp/init.lua)) 6, 8, 127, 132, 140, 144, 155, 159, 167, 171 anpassen.
 
 ### OpenHab
 
