@@ -91,3 +91,4 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 ### Software
 
 - regelmäßiger Restart vom ESP8266
+- MQTT Unterstützung
