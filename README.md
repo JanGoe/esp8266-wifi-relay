@@ -82,7 +82,12 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 
 ## Erweiterungen/Ideen (ungetestet)
 
-- Reedkontakt als "unsichtbarer" Resetschalter
+### Hardware
+
 - (Mini)sicherung vor dem HLK-PM01
-- regelmäßiger Restart vom ESP8266
+- Reedkontakt als "unsichtbarer" Resetschalter
 - DS18B20 Temperatur Sensor
+
+### Software
+
+- regelmäßiger Restart vom ESP8266
