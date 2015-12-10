@@ -37,17 +37,19 @@ Wer die Platine nicht mit SHC betreiben möchte, kann diese natürlich auch übe
 
 ### PHP Script ([tcp.php](/tcp.php))
 
-Befehl: `php tcp.php 192.168.0.36 2x4x1`
+Befehl: `php tcp.php 192.168.0.62 2x4x1`
 Dieses Kommando schaltet **relay1** auf **AN**
 
-Befehl: `php tcp.php 192.168.0.36 2x4x0`
+Befehl: `php tcp.php 192.168.0.62 2x4x0`
 Dieses Kommando schaltet **relay1** auf **AUS**
 
-Mit `php tcp.php 192.168.0.36 3x4` kann man den status vom relay abfragen antwort wäre `1/0`.
+Mit `php tcp.php 192.168.0.62 3x4` kann man den status vom relay abfragen antwort wäre `1/0`.
 
 Anstelle von **PIN 4* kann man bei der 2-fach Version auch **PIN 5** verwenden.
 
-Mit `php tcp.php 192.168.0.36 0x0` kann man den ESP8266 neustarten.
+Mit `php tcp.php 192.168.0.62 0x0` kann man den ESP8266 neustarten.
+
+*192.168.0.62 ist im obigen Beispiel die IP Adresse des ESP8266*
 
 ### HTTP Rückmeldung
 
