@@ -1,10 +1,10 @@
 -----------------------------------------------
-function send_to_visu(api)
+function send_to_visu(sid,cmd)
 conn=net.createConnection(net.TCP, 0) 
 conn:on("receive", function(conn, payload) print(payload) end)
 -- senden an shc
 conn:connect(80,"192.168.0.54")
-conn:send("GET ".. api.. " HTTP/1.1\r\n") 
+conn:send("GET /shc/index.php?app=shc&a&ajax=executeswitchcommand&sid=" ..sid.. "&command=" ..cmd.." HTTP/1.1\r\n") 
 conn:send("Host: 192.168.0.54\r\n") 
 conn:send("Accept: */*\r\n") 
 conn:send("User-Agent: Mozilla/4.0 (compatible; esp8266 Lua; Windows NT 5.1)\r\n")
@@ -23,7 +23,7 @@ end
 -- STA Modus
 wifi.setmode(wifi.STATION)
 -- SSID, Passwort
-wifi.sta.config("SSID", "password")
+wifi.sta.config("SSID", "Password")
 ---------------------------------
 print("wait")
 -----------------------------------------------------
@@ -37,7 +37,7 @@ p2 = 1
 
 lampe1 = 0 -- 0 = aus
 lampe2 = 0
--- config für gpios!
+-- config fuer gpios!
 gpio.mode(6, gpio.HIGH)
 gpio.write(6, gpio.HIGH)
 gpio.mode(7, gpio.HIGH)
@@ -106,7 +106,8 @@ end
 
 -- einstellungen fuer schalter
 
-
+sid1 = 20
+sid2 = 21
 
 
 schalter1 = gpio.read(6)
@@ -117,19 +118,19 @@ status2 = gpio.read(5)
 
 --print(schalter1)
 
--- für schalter1 
+-- fuer schalter1 
 if(schalter1 == 0 and p1 ~= schalter1) then
 p1 = 0
 --print("debug if 1")
     if(lampe1 == 0) then
         lampe1 = 1
         --print("licht zu lampe1 = 1")
-        send_to_visu("/shc/index.php?app=shc&a&ajax=executeswitchcommand&sid=20&command=" ..status1)
+        send_to_visu(sid1,status1)
         
     elseif(lampe1 == 1) then
         lampe1 = 0
         --print("licht zu lampe1 = 0")
-        send_to_visu("/shc/index.php?app=shc&a&ajax=executeswitchcommand&sid=20&command=" ..status1)
+        send_to_visu(sid1,status1)
     end
 elseif(schalter1 == 1 and p1 ~= schalter1) then
 p1 = 1
@@ -137,26 +138,26 @@ p1 = 1
     if(lampe1 == 0) then
         lampe1 = 1
        -- print("licht zu lampe1 = 1")
-        send_to_visu("/shc/index.php?app=shc&a&ajax=executeswitchcommand&sid=20&command=" ..status1)
+        send_to_visu(sid1,status1)
     elseif(lampe1 == 1) then
         lampe1 = 0
         --print("licht zu lampe1 = 0")
-        send_to_visu("/shc/index.php?app=shc&a&ajax=executeswitchcommand&sid=20&command=" ..status1)
+        send_to_visu(sid1,status1)
     end
 end
--- end für schalter 1
--- für schalter2
+-- end fuer schalter 1
+-- fuer schalter2
 if(schalter2 == 0 and p2 ~= schalter2) then
 p2 = 0
 --print("debug2 if 1")
     if(lampe2 == 0) then
         lampe2 = 1
         --print("licht zu lampe2 = 1")
-        send_to_visu("/shc/index.php?app=shc&a&ajax=executeswitchcommand&sid=21&command=" ..status2)
+        send_to_visu(sid2,status2)
     elseif(lampe2 == 1) then
         lampe2 = 0
        -- print("licht zu lampe2 = 0")
-        send_to_visu("/shc/index.php?app=shc&a&ajax=executeswitchcommand&sid=21&command=" ..status2)
+        send_to_visu(sid2,status2)
     end
 elseif(schalter2 == 1 and p2 ~= schalter2) then
 p2 = 1
@@ -164,16 +165,16 @@ p2 = 1
     if(lampe2 == 0) then
         lampe2 = 1
         --print("licht zu lampe2 = 1")
-        send_to_visu("/shc/index.php?app=shc&a&ajax=executeswitchcommand&sid=21&command=" ..status2)
+        send_to_visu(sid2,status2)
     elseif(lampe2 == 1) then
         lampe2 = 0
        -- print("licht zu lampe2 = 0")
-        send_to_visu("/shc/index.php?app=shc&a&ajax=executeswitchcommand&sid=21&command=" ..status2)
+        send_to_visu(sid2,status2)
     end
 end
--- end für schalter 2
+-- end fuer schalter 2
 
---- für relays schalten
+--- fuer relays schalten
 if(lampe1 == 1) then
 gpio.write(relay1,gpio.LOW)
 --print("s1 low")
@@ -189,6 +190,7 @@ gpio.write(relay2,gpio.LOW)
 end
 if(lampe2 == 0) then
 gpio.write(relay2,gpio.HIGH)
+--print("s2 high")
 end
     
 -- end tmr funktion

@@ -28,7 +28,7 @@ Nun kann man unter *Schaltfunktionen* Ausgänge anlegen ( als Schalterserver den
 Damit in SHC auch die Rückmeldung funktioniert, wenn manuel schaltet geschaltet wird, muss in der [init.lua](/lua-tcp/init.lua) noch folgendes angepasst werden:
 
 - In Zeile 6 und 8 bitte die IP eintragen unter der **SHC** erreichbar ist
-- In Zeile 127, 132, 140, 144, 155, 159, 167, 171 bitte **SID** anpassen  ( die SID findet ihr. wenn ihr euch mit Putty einloggt, in das Verzeichnis `/var/www/shc` geht und dort ein `php index.php app=shc -sw –l` eingebt. Nun wird euch eine Liste mit allen schaltbaren Elementen angezeigt, die SID jetzt bitte im [init.lua](/lua-tcp/init.lua) anpassen
+- In Zeile 109,110 bitte **SID** anpassen  ( die SID findet ihr. wenn ihr euch mit Putty einloggt, in das Verzeichnis `/var/www/shc` geht und dort ein `php index.php app=shc -sw –l` eingebt. Nun wird euch eine Liste mit allen schaltbaren Elementen angezeigt, die SID jetzt bitte im [init.lua](/lua-tcp/init.lua) anpassen
 
 ## Manuelle Steuerung
 
@@ -54,7 +54,7 @@ Wer die Platine nicht mit SHC betreiben möchte, kann diese natürlich auch übe
 
 ### HTTP Rückmeldung
 
-Möchte man Rückmeldungen vom manuellen Schalten auswerten geht dieses via HTTP ( der ESP8266 sendet einen HTTP-GET-REQUEST an eine gewünschte Seite - dazu bitte die Zeilen ([init.lua](/lua-tcp/init.lua)) 6, 8, 127, 132, 140, 144, 155, 159, 167, 171 anpassen.
+Möchte man Rückmeldungen vom manuellen Schalten auswerten geht dieses via HTTP ( der ESP8266 sendet einen HTTP-GET-REQUEST an eine gewünschte Seite - dazu bitte die Zeilen ([init.lua](/lua-tcp/init.lua)) 6, 7, 8, 128, 133, 141, 145, 156, 160, 168, 172 anpassen.
 
 ### OpenHab
 
