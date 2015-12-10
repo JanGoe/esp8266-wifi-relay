@@ -79,3 +79,9 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 - 48 mm breit (stark abgerundete Ecken)
 - 48 mm lang
 - 21 mm tief
+
+## Erweiterungen/Ideen (ungetestet)
+
+- Reedkontakt als "unsichtbarer" Resetschalter
+- (Mini)sicherung vor dem HLK-PM01
+- regelmäßiger Restart vom ESP8266
