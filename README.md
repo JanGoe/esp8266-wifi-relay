@@ -45,7 +45,7 @@ Dieses Kommando schaltet **relay1** auf **AUS**
 
 Mit `php tcp.php 192.168.0.62 3x4` kann man den status vom relay abfragen antwort wäre `1/0`.
 
-Anstelle von **PIN 4* kann man bei der 2-fach Version auch **PIN 5** verwenden.
+Anstelle von **PIN 4** kann man bei der 2-fach Version auch **PIN 5** verwenden.
 
 Mit `php tcp.php 192.168.0.62 0x0` kann man den ESP8266 neustarten.
 
