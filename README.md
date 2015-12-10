@@ -26,9 +26,9 @@ Um aus der "Ferne" die Relais zu steuern, hat man die Möglichkeit in [SHC](http
 Nun kann man unter *Schaltfunktionen* Ausgänge anlegen ( als Schalterserver den neu erstellen auswählen und als GPIO 4/5 )  
 Wollt ihr an der Platine einen Taster/Schalter anschliesen, bitte dafür **GND / GPIO12** und  **GND / GPIO13** nutzen ( schaltet nach **GND** ) 
 
-Damit in SHC auch die Rückmeldung funktioniert, wenn man manuel schaltet, muss in der [init.lua](/init.lua) noch folgendes angepasst werden:
+Damit in SHC auch die Rückmeldung funktioniert, wenn manuel schaltet geschaltet wird, muss in der [init.lua](/init.lua) noch folgendes angepasst werden:
 
-- In Zeile 6 und 8 bitte die IP eintragen wo **SHC** installiert ist 
+- In Zeile 6 und 8 bitte die IP eintragen unter der **SHC** erreichbar ist
 - In Zeile 127, 132, 140, 144, 155, 159, 167, 171 bitte **SID** anpassen  ( die SID findet ihr. wenn ihr euch mit Putty einloggt, in das Verzeichnis `/var/www/shc` geht und dort ein `php index.php app=shc -sw –l` eingebt. Nun wird euch eine Liste mit allen schaltbaren Elementen angezeigt, die SID jetzt bitte im [init.lua](/init.lua) anpassen
 
 ## Alternative Steuerung
@@ -37,17 +37,19 @@ Wer die Platine nicht mit SHC betreiben möchte, kann diese natürlich auch übe
 
 ### PHP Script ([tcp.php](/tcp.php))
 
-Befehl: `php tcp.php 192.168.0.36 2x4x1`
+Befehl: `php tcp.php 192.168.0.62 2x4x1`
 Dieses Kommando schaltet **relay1** auf **AN**
 
-Befehl: `php tcp.php 192.168.0.36 2x4x0`
+Befehl: `php tcp.php 192.168.0.62 2x4x0`
 Dieses Kommando schaltet **relay1** auf **AUS**
 
-Mit `php tcp.php 192.168.0.36 3x4` kann man den status vom relay abfragen antwort wäre `1/0`.
+Mit `php tcp.php 192.168.0.62 3x4` kann man den status vom relay abfragen antwort wäre `1/0`.
 
-Anstelle von **PIN 4* kann man bei der 2-fach Version auch **PIN 5** verwenden.
+Anstelle von **PIN 4** kann man bei der 2-fach Version auch **PIN 5** verwenden.
 
-Mit `php tcp.php 192.168.0.36 0x0` kann man den ESP8266 neustarten.
+Mit `php tcp.php 192.168.0.62 0x0` kann man den ESP8266 neustarten.
+
+*192.168.0.62 ist im obigen Beispiel die IP Adresse des ESP8266*
 
 ### HTTP Rückmeldung
 
@@ -55,16 +57,24 @@ Möchte man Rückmeldungen vom manuellen Schalten auswerten geht dieses via HTTP
 
 ### OpenHab
 
-Beispiel für OpenHab ( Benötigt PHP auf dem OpenHab Host und das EXEC Binding )
+Beispiel für [OpenHab](http://www.openhab.org/) ( Benötigt PHP auf dem OpenHab Host und das [EXEC Binding](https://github.com/openhab/openhab/wiki/Exec-Binding) )
 
-items datei
+Bitte in der Items Datei (`<openhab_installation_dir>/configurations/items`) folgendes eintragen:
 
-Switch Schalter **Lampe1** `{exec=">[ON:php /var/www/tcp.php 192.168.0.62 2x3x1] >[OFF:php /var/www/tcp.php 192.168.0.62 2x3x0]"}`
-Auch hier für Rückmeldungen bitte die OpenHab REST-API nutzen und die zeilen 6, 8, 127, 132, 140, 144, 155, 159, 167, 171 anpassen.
+```
+Switch Schalter "Lampe1" {exec=">[ON:php /var/www/tcp.php 192.168.0.62 2x3x1] >[OFF:php /var/www/tcp.php 192.168.0.62 2x3x0]"}
+```
+
+*192.168.0.62 ist im obigen Beispiel die IP Adresse des ESP8266*
+
+Auch hier für Rückmeldungen bitte die [OpenHab REST-API](https://github.com/openhab/openhab/wiki/REST-API) nutzen und die Zeilen 6, 8, 127, 132, 140, 144, 155, 159, 167, 171 anpassen.
+
+Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https://openhabdoc.readthedocs.org/de/latest/Beispiel/).
 
 ## Sonstige Informationen
 
-Platinen Maße
-48mm breit ( stark abgerundete ecken )
-48mm lang
-21mm tief
+### Platinen Maße
+
+- 48 mm breit (stark abgerundete Ecken)
+- 48 mm lang
+- 21 mm tief
