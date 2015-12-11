@@ -84,7 +84,8 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 
 ### Hardware
 
-- (Mini)sicherung vor dem [HLK-PM01](http://lygte-info.dk/review/Power%20Mains%20to%205V%200.6A%20Hi-Link%20HLK-PM01%20UK.html)
+- Sicherung vor dem HLK-PM01 - [Teardown](http://lygte-info.dk/review/Power%20Mains%20to%205V%200.6A%20Hi-Link%20HLK-PM01%20UK.html)
+- dahinter MOV (Metaloxid Varistor)
 - Reedkontakt als "unsichtbarer" Resetschalter
 - DS18B20 Temperatur Sensor
 
