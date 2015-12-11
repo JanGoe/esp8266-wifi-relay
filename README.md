@@ -23,7 +23,7 @@ Dazu bitte die [init.lua](/lua-tcp/init.lua) öffen, die WLAN Daten anpassen und
 
 Um aus der "Ferne" die Relais zu steuern, hat man die Möglichkeit in [SHC](http://rpi-controlcenter.de/) einen Schalterserver einzutragen mit der IP des WIFI-Relais und Port 9274 ( GPIO lesen JA, GPIO schreiben JA - geeignetes Model z.B. Arduino Nano ) 
 
-Nun kann man unter *Schaltfunktionen* Ausgänge anlegen ( als Schalterserver den neu erstellen auswählen und als **GPIO 4/5** )  
+Nun kann man unter *Schaltfunktionen* Ausgänge anlegen ( als Schalterserver den neu erstellen auswählen und als **GPIO4/5** )  
 
 Damit in SHC auch die Rückmeldung funktioniert, wenn manuel schaltet geschaltet wird, muss in der [init.lua](/lua-tcp/init.lua) noch folgendes angepasst werden:
 
@@ -80,16 +80,21 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 - 48 mm lang
 - 21 mm tief
 
+### neue Firmware flashen
+
+Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu starten
+
 ## Erweiterungen/Ideen (ungetestet)
 
 ### Hardware
 
-- Sicherung vor dem HLK-PM01 - [Teardown](http://lygte-info.dk/review/Power%20Mains%20to%205V%200.6A%20Hi-Link%20HLK-PM01%20UK.html)
-- dahinter MOV (Metaloxid Varistor)
-- Reedkontakt als "unsichtbarer" Resetschalter
+- Sicherung (z.B. Reichelt *MINI FLINK 1,0A*) vor dem *HLK-PM01* - [Teardown](http://lygte-info.dk/review/Power%20Mains%20to%205V%200.6A%20Hi-Link%20HLK-PM01%20UK.html)
+- dahinter MOV (z.B. Reichelt *VDR-0,6 270*)
+- Reedkontakt (z.B. Reichelt *KSK 1A66*) als "unsichtbarer" Resetschalter
 - DS18B20 Temperatur Sensor
 
 ### Software
 
 - regelmäßiger Restart vom ESP8266
-- MQTT Unterstützung
+  * Remote Neustart via Skript: `php tcp.php 192.168.0.62 0x0` (siehe oben)
+- [MQTT](https://primalcortex.wordpress.com/2015/02/06/nodemcu-and-mqtt-how-to-start/) Unterstützung
