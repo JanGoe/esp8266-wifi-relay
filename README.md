@@ -1,10 +1,8 @@
-# ESP8266 Wiki Relay
+# ESP8266-Wifi-Relay
 
 ## Installation
 
 ![Anschluss](/anschluss.png?raw=true)
-
-Zum "Debuggen" bitte **GND**, **RX**, **TX** mit einem [TTL-USB Adapter](http://www.elecfreaks.com/wiki/index.php?title=USB_to_RS232_Converter) verbinden, und **L**, **N** oben Links anschließen.
 
 ```
 
@@ -13,7 +11,9 @@ VORSICHT - Sobald L/N (~230V) angeschlossen sind und Netzspannung anliegt, die P
 ```
 ## Konfiguration
 
-Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und Blau leuchten, jetzt habt ihr die Möglichkeit die eigentliche Software ([init.lua](/lua-tcp/init.lua)) auf dem ESP8266 zu "Speichern".
+Als ersten Schritt **GND**, **RX**, **TX** mit einem [TTL-USB Adapter](http://www.elecfreaks.com/wiki/index.php?title=USB_to_RS232_Converter) verbinden, und **L**, **N** anschließen (siehe Anschlussplan).
+
+Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und Blau leuchten. Jetzt habt ihr die Möglichkeit die eigentliche Software ([init.lua](/lua-tcp/init.lua)) auf dem ESP8266 zu "Speichern".
 
 Dazu bitte die [init.lua](/lua-tcp/init.lua) öffen, die WLAN Daten anpassen und die Datei mit dem [ESPlorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren (über *Save* im ESPlorer). Nach dem erfolgreichen Übertragen, wird automatisch der TCP-Server gestartet und es wird die IP vom ESP8266 angezeigt (rechtes Fenster).
 
@@ -21,7 +21,7 @@ Dazu bitte die [init.lua](/lua-tcp/init.lua) öffen, die WLAN Daten anpassen und
 
 ## SHC Schaltserver
 
-Um aus der "Ferne" die Relais zu steuern, hat man die Möglichkeit in [SHC](http://rpi-controlcenter.de/) einen Schalterserver einzutragen mit der IP des WIFI-Relais und Port 9274 ( GPIO lesen JA, GPIO schreiben JA - geeignetes Model z.B. Arduino Nano ) 
+Um aus der "Ferne" die Relais zu steuern, hat man die Möglichkeit in [SHC](http://rpi-controlcenter.de/) einen Schalterserver einzutragen mit der IP des ESP8266-Wifi-Relay und Port 9274 ( GPIO lesen JA, GPIO schreiben JA - geeignetes Model z.B. Arduino Nano ) 
 
 Nun kann man unter *Schaltfunktionen* Ausgänge anlegen ( als Schalterserver den neu erstellen auswählen und als **GPIO4/5** )  
 
@@ -30,11 +30,15 @@ Damit in SHC auch die Rückmeldung funktioniert, wenn manuel schaltet geschaltet
 - In Zeile 6 und 8 bitte die IP eintragen unter der **SHC** erreichbar ist
 - In Zeile 109,110 bitte **SID** anpassen  ( die SID findet ihr. wenn ihr euch mit Putty einloggt, in das Verzeichnis `/var/www/shc` geht und dort ein `php index.php app=shc -sw –l` eingebt. Nun wird euch eine Liste mit allen schaltbaren Elementen angezeigt, die SID jetzt bitte im [init.lua](/lua-tcp/init.lua) anpassen
 
+## MQTT
+
+Das ESP8266-Wifi-Relay lässt sich auch via [MQTT](https://primalcortex.wordpress.com/2015/02/06/nodemcu-and-mqtt-how-to-start/) steuern/abfragen. Hierfür bitte [init.lua](/lua-tcp/aktor.lua) und [init.lua](/lua-tcp/aktor.lua) verwenden (Achtung: die Dateien müssen angepasst werden).
+
 ## Manuelle Steuerung
 
 Wollt ihr an der Platine einen Taster/Schalter anschliesen, bitte dafür **GND / GPIO12** und  **GND / GPIO13** nutzen ( schaltet nach **GND** ) 
 
-## Alternative Steuerung
+## Alternative Steuerungen
 
 Wer die Platine nicht mit SHC betreiben möchte, kann diese natürlich auch über einfache TCP Befehle steuern.
 
@@ -80,7 +84,7 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 - 48 mm lang
 - 21 mm tief
 
-### neue Firmware flashen
+### Neue Firmware flashen
 
 Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu starten
 
@@ -97,4 +101,3 @@ Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu 
 
 - regelmäßiger Restart vom ESP8266
   * Remote Neustart via Skript: `php tcp.php 192.168.0.62 0x0` (siehe oben)
-- [MQTT](https://primalcortex.wordpress.com/2015/02/06/nodemcu-and-mqtt-how-to-start/) Unterstützung
