@@ -32,7 +32,7 @@ Damit in SHC auch die Rückmeldung funktioniert, wenn manuel schaltet geschaltet
 
 ## MQTT
 
-Das ESP8266-Wifi-Relay lässt sich auch via [MQTT](https://primalcortex.wordpress.com/2015/02/06/nodemcu-and-mqtt-how-to-start/) steuern/abfragen. Hierfür bitte [init.lua](/lua-tcp/init.lua) und [aktor.lua](/lua-tcp/aktor.lua) verwenden (Achtung: die Dateien müssen angepasst werden).
+Das ESP8266-Wifi-Relay lässt sich auch via [MQTT](https://primalcortex.wordpress.com/2015/02/06/nodemcu-and-mqtt-how-to-start/) steuern/abfragen. Hierfür bitte [init.lua](/lua-tcp/aktor.lua) und [aktor.lua](/lua-tcp/aktor.lua) verwenden (Achtung: die Dateien müssen angepasst werden).
 
 ## Manuelle Steuerung
 
