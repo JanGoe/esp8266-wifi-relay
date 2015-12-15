@@ -1,5 +1,11 @@
 # ESP8266-Wifi-Relay
 
+## Spezifikation
+
+- WLAN steuerbares 2-Port Relais
+- optionala Schalter/Taster Unterstützung)
+- Firmware: [NodeMCU](https://github.com/nodemcu/nodemcu-firmware/blob/master/README.md) 
+
 ## Installation
 
 ![Anschluss](/anschluss.png?raw=true)
