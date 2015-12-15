@@ -13,7 +13,7 @@ VORSICHT - Sobald L/N (~230V) angeschlossen sind und Netzspannung anliegt, die P
 
 Als ersten Schritt **GND**, **RX**, **TX** mit einem [TTL-USB Adapter](http://www.elecfreaks.com/wiki/index.php?title=USB_to_RS232_Converter) (**Achtung**: 3.3 Volt Pegel, bei 5 Volt muss ein [Pegelwandler](https://www.mikrocontroller.net/articles/Pegelwandler) "Levelshifter" verwendet werden) verbinden. **RX** wird mit **TX** verbunden und **TX** mit **RX**. Dann **L**, **N** anschließen (siehe Anschlussplan).
 
-Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und die blaue LED kurz aufblinken. Jetzt habt ihr die Möglichkeit die eigentliche Software ([init.lua](/lua-tcp/init.lua)) auf dem ESP8266 zu "Speichern".
+Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und die blaue LED kurz aufblinken. Jetzt habt ihr die Möglichkeit die eigentliche Steuerungs-Software ([init.lua](/lua-tcp/init.lua)) auf dem ESP8266 zu übertragen.
 
 Dazu bitte die [init.lua](/lua-tcp/init.lua) öffen, die WLAN Daten anpassen und die Datei mit dem [ESPlorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren (über *Save* im ESPlorer). Nach dem erfolgreichen Übertragen, wird automatisch der TCP-Server gestartet und es wird die IP vom ESP8266 angezeigt (rechtes Fenster).
 
@@ -101,3 +101,4 @@ Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu 
 
 - regelmäßiger Restart vom ESP8266
   * Remote Neustart via Skript: `php tcp.php 192.168.0.62 0x0` (siehe oben)
+- Quick Setup Modus: Wifi Daten werden über ein Webinterface eingegeben (z.B: http://www.john-lassen.de/index.php/projects/esp-8266-arduino-ide-webconfig)
