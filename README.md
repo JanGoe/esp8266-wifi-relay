@@ -3,7 +3,7 @@
 ## Spezifikation
 
 - WLAN steuerbares 2-Port Relais
-- optionala Schalter/Taster Unterstützung)
+- optionale Schalter/Taster Unterstützung (inkl. Feedback)
 - Firmware: [NodeMCU](https://github.com/nodemcu/nodemcu-firmware/blob/master/README.md) 
 
 ## Installation
