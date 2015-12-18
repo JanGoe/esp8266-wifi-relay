@@ -17,7 +17,9 @@ VORSICHT - Sobald L/N (~230V) angeschlossen sind und Netzspannung anliegt, die P
 ```
 ## Konfiguration
 
-'NEU'
+**NEU**
+
+
 Beim ersten Start vom ESP8266 wird ein "HOTSPOT" Erstellt (nach ca.10sek Leuchtet die Blaue LED am ESP8266 3x kurz/das Relay schalter 3x) name ESP_XXXX Wenn ihr eucht mit diesem verbindet könnt ihr im Browser auf `http://192.168.4.1/set` gehen und dort die WLan daten ohne USB-TTL adapter eingeben, nach klicke auf Speichern startet der ESP8266 neu und versucht sich zu verbinden, gelingt das nicht könnt ihr euch nach ca. 10sek Erneut im ESP8266 HOTSPOT einlogen und die daten erneut eingeben, bei erfolg startet der TCP-Server auf port 9274 und ihr könnt befehle ausführen z.b. Dateien auf den ESP8266 Übertragen siehe Befehls-Tabelle weiter unten
 
 
