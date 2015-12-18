@@ -24,7 +24,7 @@ Beim ersten Start vom ESP8266 wird ein "HOTSPOT" Erstellt (nach ca.10sek Leuchte
 
 ![HOTPOT](/pics/ssid.jpg?raw=true)
 ![Config-Page](/pics/set.jpg?raw=true)
-```
+
 
 
 **OLD**
@@ -117,7 +117,7 @@ Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu 
 - DS18B20 Temperatur Sensor
 - DHT22 
 ![Config-Page](/pics/dht22.jpg?raw=true)
-```
+
 ### Software
 
 - regelmäßiger Restart vom ESP8266
