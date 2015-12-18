@@ -69,7 +69,7 @@ Wer die Platine nicht mit SHC betreiben möchte, kann diese natürlich auch übe
 | `php tcp.php 192.168.0.62 2x5x1` | Dieses Kommando schaltet **Relais 2** auf **AN** | |
 | `php tcp.php 192.168.0.62 2x5x0` | Dieses Kommando schaltet **Relais 2** auf **AUS** | |
 | `php tcp.php 192.168.0.62 3x5` | Status vom **Relais 2** abfragen | `1/0` |
-| `php tcp.php 192.168.0.62 4x1  | Versucht daten von DHT22 der an gpio5 (pin1) angeschlossen ist zu holen | Temp;Luftfeuchte |
+| `php tcp.php 192.168.0.62 4x1`  | Versucht daten von DHT22 der an gpio5 (pin1) angeschlossen ist zu holen | Temp;Luftfeuchte |
 | `php tcp.php 192.168.0.62 0x0` | ESP8266 neustarten | |
 | `php tcp.php 192.168.0.62 update datei.lua` | Läd das file 'datei.lua auf den esp' und restartet den ESP8266 | | 
 
