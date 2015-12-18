@@ -8,7 +8,7 @@
 
 ## Installation
 
-![Anschluss](/anschluss.png?raw=true)
+![Anschluss](/pics/anschluss.png?raw=true)
 
 ```
 
@@ -22,14 +22,19 @@ VORSICHT - Sobald L/N (~230V) angeschlossen sind und Netzspannung anliegt, die P
 
 Beim ersten Start vom ESP8266 wird ein "HOTSPOT" Erstellt (nach ca.10sek Leuchtet die Blaue LED am ESP8266 3x kurz/das Relay schalter 3x) name ESP_XXXX Wenn ihr eucht mit diesem verbindet könnt ihr im Browser auf `http://192.168.4.1/set` gehen und dort die WLan daten ohne USB-TTL adapter eingeben, nach klicke auf Speichern startet der ESP8266 neu und versucht sich zu verbinden, gelingt das nicht könnt ihr euch nach ca. 10sek Erneut im ESP8266 HOTSPOT einlogen und die daten erneut eingeben, bei erfolg startet der TCP-Server auf port 9274 und ihr könnt befehle ausführen z.b. Dateien auf den ESP8266 Übertragen siehe Befehls-Tabelle weiter unten
 
+![HOTPOT](/pics/ssid.jpg?raw=true)
+![Config-Page](/pics/set.jpg?raw=true)
+```
 
+
+**OLD**
 Als ersten Schritt **GND**, **RX**, **TX** mit einem [TTL-USB Adapter](http://www.elecfreaks.com/wiki/index.php?title=USB_to_RS232_Converter) (**Achtung**: 3.3 Volt Pegel, bei 5 Volt muss ein [Pegelwandler](https://www.mikrocontroller.net/articles/Pegelwandler) "Levelshifter" verwendet werden) verbinden. **RX** wird mit **TX** verbunden und **TX** mit **RX**. Dann **L**, **N** anschließen (siehe Anschlussplan).
 
 Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und die blaue LED kurz aufblinken. Jetzt habt ihr die Möglichkeit die eigentliche Steuerungs-Software ([init.lua](/lua-tcp/init.lua)) auf dem ESP8266 zu übertragen.
 
 Dazu bitte die [init.lua](/lua-tcp/init.lua) öffen, die WLAN Daten anpassen und die Datei mit dem [ESPlorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren (über *Save* im ESPlorer). Nach dem erfolgreichen Übertragen, wird automatisch der TCP-Server gestartet und es wird die IP vom ESP8266 angezeigt (rechtes Fenster).
 
-![ESPlorer](/esplorer.png?raw=true)
+![ESPlorer](/pics/esplorer.png?raw=true)
 
 ## SHC Schaltserver
 
@@ -110,7 +115,9 @@ Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu 
 - dahinter MOV (z.B. Reichelt *VDR-0,6 270*)
 - Reedkontakt (z.B. Reichelt *KSK 1A66*) als "unsichtbarer" Resetschalter
 - DS18B20 Temperatur Sensor
-
+- DHT22 
+![Config-Page](/pics/dht22.jpg?raw=true)
+```
 ### Software
 
 - regelmäßiger Restart vom ESP8266
