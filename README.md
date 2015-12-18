@@ -17,6 +17,10 @@ VORSICHT - Sobald L/N (~230V) angeschlossen sind und Netzspannung anliegt, die P
 ```
 ## Konfiguration
 
+'NEU'
+Beim ersten Start vom ESP8266 wird ein "HOTSPOT" Erstellt (nach ca.10sek Leuchtet die Blaue LED am ESP8266 3x kurz/das Relay schalter 3x) name ESP_XXXX Wenn ihr eucht mit diesem verbindet könnt ihr im Browser auf `http://192.168.4.1/set` gehen und dort die WLan daten ohne USB-TTL adapter eingeben, nach klicke auf Speichern startet der ESP8266 neu und versucht sich zu verbinden, gelingt das nicht könnt ihr euch nach ca. 10sek Erneut im ESP8266 HOTSPOT einlogen und die daten erneut eingeben, bei erfolg startet der TCP-Server auf port 9274 und ihr könnt befehle ausführen z.b. Dateien auf den ESP8266 Übertragen siehe Befehls-Tabelle weiter unten
+
+
 Als ersten Schritt **GND**, **RX**, **TX** mit einem [TTL-USB Adapter](http://www.elecfreaks.com/wiki/index.php?title=USB_to_RS232_Converter) (**Achtung**: 3.3 Volt Pegel, bei 5 Volt muss ein [Pegelwandler](https://www.mikrocontroller.net/articles/Pegelwandler) "Levelshifter" verwendet werden) verbinden. **RX** wird mit **TX** verbunden und **TX** mit **RX**. Dann **L**, **N** anschließen (siehe Anschlussplan).
 
 Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und die blaue LED kurz aufblinken. Jetzt habt ihr die Möglichkeit die eigentliche Steuerungs-Software ([init.lua](/lua-tcp/init.lua)) auf dem ESP8266 zu übertragen.
@@ -58,7 +62,9 @@ Wer die Platine nicht mit SHC betreiben möchte, kann diese natürlich auch übe
 | `php tcp.php 192.168.0.62 2x5x1` | Dieses Kommando schaltet **Relais 2** auf **AN** | |
 | `php tcp.php 192.168.0.62 2x5x0` | Dieses Kommando schaltet **Relais 2** auf **AUS** | |
 | `php tcp.php 192.168.0.62 3x5` | Status vom **Relais 2** abfragen | `1/0` |
+| `php tcp.php 192.168.0.62 4x1  | Versucht daten von DHT22 der an gpio5 (pin1) angeschlossen ist zu holen | Temp;Luftfeuchte |
 | `php tcp.php 192.168.0.62 0x0` | ESP8266 neustarten | |
+| `php tcp.php 192.168.0.62 update datei.lua` | Läd das file 'datei.lua auf den esp' und restartet den ESP8266 | | 
 
 *192.168.0.62 ist im obigen Beispiel die IP Adresse des ESP8266*
 
@@ -107,4 +113,3 @@ Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu 
 
 - regelmäßiger Restart vom ESP8266
   * Remote Neustart via Skript: `php tcp.php 192.168.0.62 0x0` (siehe oben)
-- Quick Setup Modus: Wifi Daten werden über ein Webinterface eingegeben (z.B: http://www.john-lassen.de/index.php/projects/esp-8266-arduino-ide-webconfig)

@@ -9,6 +9,7 @@
 <input type="text" name="ssid" value="SSID"><br>
 <input type="text" name="pwd" value="Password"><br>
 <input type="Submit" name="senden" value="Speichern"><br><br><br>
-<font size="2" color="red">Achtung "Speichern" Startet den Chip direkt mit den eingegeben WLan Daten neu!</font>
+<font size="2" color="red">Achtung "Speichern" Startet den Chip<br> direkt mit den eingegeben WLan Daten neu!</font><br>
+<hr><br>
 <font size="2" face="Arial"><a href="mailto:jan.andrea7@googlemail.com">(c) by Jan Gödecke 2015-2016</a>
 </html>
