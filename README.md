@@ -23,7 +23,7 @@ A) Beim ersten Start des ESP8266-Wifi-Relay wird ein **HOTSPOT** (nach ca. 10 Se
 
 Sofern alles geklappt hat, startet der TCP-Server auf Port 9274 und es können Befehle ausführt werden (z.b. Dateien auf den ESP8266 übertragen - siehe Befehls-Tabelle weiter unten)
 
-![HOTPOT](/pics/ssid.jpg?raw=true)
+![HOTSPOT](/pics/ssid.jpg?raw=true)
 ![Config-Page](/pics/set.jpg?raw=true)
 
 ### Legacy Setup
@@ -101,12 +101,18 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 
 | GPIO  | PIN | Bemerkung |
 | ------------- | ------------- | ------------- |
-| GPIO0 | 12 | Flashmodus |
-| GPIO5 | 13 | DHT22 |
-| GPIO4 | 14 | Relais 1 |
-| GPIO5 | 13 | Relais 2 |
+| GPIO0 | 18 | Flashmodus (DS18D20 - ungetestet) |
+| GPIO4 | 19 | Relais 1 |
+| GPIO5 | 20 | Relais 2 (oder DHT22) |
 | GPIO12 | 6 | Schalter/Taster 1 |
 | GPIO13 | 7 | Schalter/Taster 2 |
+| GPIO14 | 5 | *frei* |
+| GPIO15 | 16 | *frei* |
+| GPIO16 | 4 | *frei* |
+| GPIO9 | 11 | *ungetestet* |
+| GPIO10 | 12 | *ungetestet* |
+
+![Pinout](/pics/esp8266-pin.png?raw=true)
 
 [NodeMCU: IO index Tabelle](https://github.com/nodemcu/nodemcu-firmware/wiki/nodemcu_api_en#gpio-new-table--build-20141219-and-later)
 
