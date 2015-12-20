@@ -97,6 +97,19 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 
 ## Sonstige Informationen
 
+### GPIO Mapping
+
+| GPIO  | PIN | Bemerkung |
+| ------------- | ------------- | ------------- |
+| GPIO0 | 12 | Flashmodus |
+| GPIO5 | 13 | DHT22 |
+| GPIO4 | 14 | Relais 1 |
+| GPIO5 | 13 | Relais 2 |
+| GPIO12 | 6 | Schalter/Taster 1 |
+| GPIO13 | 7 | Schalter/Taster 2 |
+
+[NodeMCU: IO index Tabelle](https://github.com/nodemcu/nodemcu-firmware/wiki/nodemcu_api_en#gpio-new-table--build-20141219-and-later)
+
 ### Platinen Maße
 
 - 48 mm breit (stark abgerundete Ecken)
