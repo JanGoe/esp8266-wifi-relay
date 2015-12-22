@@ -30,9 +30,9 @@ Sofern alles geklappt hat, startet der TCP-Server auf Port 9274 und es können B
 
 Als ersten Schritt **GND**, **RX**, **TX** mit einem [TTL-USB Adapter](http://www.elecfreaks.com/wiki/index.php?title=USB_to_RS232_Converter) (**Achtung**: 3.3 Volt Pegel, bei 5 Volt muss ein [Pegelwandler](https://www.mikrocontroller.net/articles/Pegelwandler) "Levelshifter" verwendet werden) verbinden. **RX** wird mit **TX** verbunden und **TX** mit **RX**. Dann **L**, **N** anschließen (siehe Anschlussplan).
 
-Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und die blaue LED kurz aufblinken. Jetzt habt ihr die Möglichkeit die eigentliche Steuerungs-Software ([init.lua](/lua-tcp/init.lua)) auf dem ESP8266 zu übertragen.
+Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und die blaue LED kurz aufblinken. Jetzt habt ihr die Möglichkeit die eigentliche Steuerungs-Software ([aktor.lua](/lua-tcp/aktor.lua)) auf dem ESP8266 zu übertragen.
 
-Dazu bitte die [init.lua](/lua-tcp/init.lua) öffen, die WLAN Daten anpassen und die Datei mit dem [ESPlorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren (über *Save* im ESPlorer). Nach dem erfolgreichen Übertragen, wird automatisch der TCP-Server gestartet und es wird die IP vom ESP8266 angezeigt (rechtes Fenster).
+Dazu bitte die [aktor.lua](/lua-tcp/aktor.lua) öffen, die WLAN Daten anpassen und die Datei mit dem [ESPlorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren (über *Save* im ESPlorer). Nach dem erfolgreichen Übertragen, wird automatisch der TCP-Server gestartet und es wird die IP vom ESP8266 angezeigt (rechtes Fenster).
 
 ![ESPlorer](/pics/esplorer.png?raw=true)
 
@@ -42,10 +42,11 @@ Um aus der "Ferne" die Relais zu steuern, hat man die Möglichkeit in [SHC](http
 
 Nun kann man unter *Schaltfunktionen* Ausgänge anlegen ( als Schalterserver den neu erstellen auswählen und als **GPIO4/5** )  
 
-Damit in SHC auch die Rückmeldung funktioniert, wenn manuel schaltet geschaltet wird, muss in der [init.lua](/lua-tcp/init.lua) noch folgendes angepasst werden:
 
-- In Zeile 6 und 8 bitte die IP eintragen unter der **SHC** erreichbar ist
-- In Zeile 109,110 bitte **SID** anpassen  ( die SID findet ihr. wenn ihr euch mit Putty einloggt, in das Verzeichnis `/var/www/shc` geht und dort ein `php index.php app=shc -sw –l` eingebt. Nun wird euch eine Liste mit allen schaltbaren Elementen angezeigt, die SID jetzt bitte im [init.lua](/lua-tcp/init.lua) anpassen
+Damit in SHC auch die Rückmeldung funktioniert, wenn manuel schaltet geschaltet wird, muss in der [aktor.lua](/lua-tcp/aktor.lua) noch folgendes angepasst werden:
+- In Zeile 3 bitte platform="SHC"
+- In Zeile 18 und 20 bitte die IP eintragen unter der **SHC** erreichbar ist
+- In Zeile 154,155 bitte **SID** anpassen  ( die SID findet ihr. wenn ihr euch mit Putty einloggt, in das Verzeichnis `/var/www/shc` geht und dort ein `php index.php app=shc -sw –l` eingebt. Nun wird euch eine Liste mit allen schaltbaren Elementen angezeigt, die SID jetzt bitte im [init.lua](/lua-tcp/init.lua) anpassen
 
 ## MQTT
 
@@ -91,7 +92,12 @@ Switch Schalter "Lampe1" {exec=">[ON:php /var/www/tcp.php 192.168.0.62 2x3x1] >[
 
 *192.168.0.62 ist im obigen Beispiel die IP Adresse des ESP8266*
 
-Auch hier für Rückmeldungen bitte die [OpenHab REST-API](https://github.com/openhab/openhab/wiki/REST-API) nutzen und die Zeilen 6, 8, 127, 132, 140, 144, 155, 159, 167, 171 anpassen.
+Für Rückmeldungen in Openhab bitte in der [aktor.lua](/lua-tcp/aktor.lua) folgende zeilen anpassen:
+- in Zeile 3 platform="Openhab"
+- in zeile 18,20 die ip unter der openhab erreichbar ist
+- in zeile 11 ggf den Port anpassen
+- in zeile 154,155 die namen der Items die aktualisiert werden sollen
+
 
 Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https://openhabdoc.readthedocs.org/de/latest/Beispiel/).
 
