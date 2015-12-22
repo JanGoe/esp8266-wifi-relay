@@ -1,10 +1,22 @@
------------------------------------------------
+version = "0.3.1" ----------------------------------------------- openhab support added 22.12.2015
 function send_to_visu(sid,cmd)
+platform = "Openhab"
+
+if(platform == "SHC") then
+port = 80
+link = "/shc/index.php?app=shc&a&ajax=executeswitchcommand&sid=" ..sid.. "&command=" ..cmd
+end
+if(platform == "Openhab") then
+if(cmd == 1) then switch="ON" elseif(cmd == 0) then switch="OFF" end
+port= 8080
+link = "/CMD?" ..sid.."=" ..switch
+end
+print(link)
 conn=net.createConnection(net.TCP, 0) 
 conn:on("receive", function(conn, payload) print(payload) end)
 -- senden an shc
-conn:connect(80,"192.168.0.54")
-conn:send("GET /shc/index.php?app=shc&a&ajax=executeswitchcommand&sid=" ..sid.. "&command=" ..cmd.." HTTP/1.1\r\n") 
+conn:connect(port,"192.168.0.54")
+conn:send("GET "..link.." HTTP/1.1\r\n") 
 conn:send("Host: 192.168.0.54\r\n") 
 conn:send("Accept: */*\r\n") 
 conn:send("User-Agent: Mozilla/4.0 (compatible; esp8266 Lua; Windows NT 5.1)\r\n")
@@ -139,9 +151,8 @@ end
 
 -- einstellungen fuer schalter
 
-sid1 = 20
-sid2 = 21
-
+sid1 = "Schlafzimmer_Lampe"
+sid2 = "Schlafzimmer_Lampe1"
 
 schalter1 = gpio.read(6)
 schalter2 = gpio.read(7)
