@@ -117,6 +117,7 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 | GPIO16 | 4 | 0 | *frei* |
 | GPIO9 | 11 | 11 | *ungetestet* |
 | GPIO10 | 12 | 12 | *ungetestet* |
+| GPIO2 | 13 | 4 | *ungetestet* |
 
 ![Pinout](/pics/esp8266-pin.png?raw=true)
 
