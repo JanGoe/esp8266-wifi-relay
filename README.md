@@ -10,11 +10,8 @@
 
 ![Anschluss](/pics/anschluss.png?raw=true)
 
-```
+![Achtung](/pics/achtung-red.png?raw=true) Sobald **L/N** (~230V) angeschlossen sind und **Netzspannung** anliegt, die Platine nicht mehr berühren!
 
-VORSICHT - Sobald L/N (~230V) angeschlossen sind und Netzspannung anliegt, die Platine nicht mehr berühren!
-
-```
 ## Konfiguration
 
 ### Quick Setup
@@ -132,6 +129,12 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 ### Neue Firmware flashen
 
 Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu starten
+
+### ![Achtung](/pics/achtung-yellow.png?raw=true) 10A Erweiterung
+
+Obwohl die Relais mit 10A belastet werden könnten, sind die Leiterbahnen zu den Schraubklemmen zu dünn und sind mit maximal 2A belastbar. Um die volle Belastbarkeit erreichen, muss man an der Unterseite der Platine die Leiterbahnen von den Relaisanschlüssen zur Schraubklemme mit tauglichen Drähten überbrücken/verstärken. (siehe [raspiprojekt.de](https://raspiprojekt.de/kaufen/shop/bausaetze/wifi-relais-zweifach.html))
+
+![10A Erweiterung](/pics/esp8266-10a.png?raw=true)
 
 ## Erweiterungen/Ideen (ungetestet)
 
