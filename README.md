@@ -68,6 +68,7 @@ Wer die Platine nicht mit SHC betreiben möchte, kann diese natürlich auch übe
 | `php tcp.php 192.168.0.62 3x4` | Status vom **Relais 1** abfragen | `1/0` |
 | `php tcp.php 192.168.0.62 3x5` | Status vom **Relais 2** abfragen | `1/0` |
 | `php tcp.php 192.168.0.62 4x1`  | DHT22 Daten abfragen | Temp;Luftfeuchte |
+| `php tcp.php 192.168.0.62 9x0` | Version abfragen | 0.3.2 |
 | `php tcp.php 192.168.0.62 0x0` | ESP8266 neustarten | |
 | `php tcp.php 192.168.0.62 update datei.lua` | Datei 'datei.lua' hochladen und ESP8266neu starten | | 
 
