@@ -2,9 +2,10 @@
 
 ## Spezifikation
 
-- WLAN steuerbares 2-Port Relais
+- WLAN steuerbares 2-Port Relais / oder nur mit 1 Relais bestückt
 - optionale Schalter/Taster Unterstützung (inkl. Feedback)
 - Firmware: [NodeMCU](https://github.com/nodemcu/nodemcu-firmware/blob/master/README.md) 
+- Bestellung über [Ebay](http://www.ebay.de/itm/321975116906?var=&ssPageName=STRK:MESELX:IT&_trksid=p3984.m1558.l2649) in verschienden variationen oder per [mail](mailto:jan.andrea7@googlemail.com)
 
 ## Installation
 
@@ -41,9 +42,9 @@ Nun kann man unter *Schaltfunktionen* Ausgänge anlegen ( als Schalterserver den
 
 
 Damit in SHC auch die Rückmeldung funktioniert, wenn manuel schaltet geschaltet wird, muss in der [aktor.lua](/lua-tcp/aktor.lua) noch folgendes angepasst werden:
-- In Zeile 3 bitte platform="SHC"
-- In Zeile 18 und 20 bitte die IP eintragen unter der **SHC** erreichbar ist
-- In Zeile 154,155 bitte **SID** anpassen  ( die SID findet ihr. wenn ihr euch mit Putty einloggt, in das Verzeichnis `/var/www/shc` geht und dort ein `php index.php app=shc -sw –l` eingebt. Nun wird euch eine Liste mit allen schaltbaren Elementen angezeigt, die SID jetzt bitte im [init.lua](/lua-tcp/init.lua) anpassen
+- In Zeile 8 bitte platform="SHC"
+- In Zeile 28 und 30 bitte die IP eintragen unter der **SHC** erreichbar ist
+- In Zeile 4,5 bitte **SID** anpassen  ( die SID findet ihr. wenn ihr euch mit Putty einloggt, in das Verzeichnis `/var/www/shc` geht und dort ein `php index.php app=shc -sw –l` eingebt. Nun wird euch eine Liste mit allen schaltbaren Elementen angezeigt, die SID jetzt bitte im [init.lua](/lua-tcp/init.lua) anpassen
 
 ## MQTT
 
@@ -56,6 +57,7 @@ Wollt ihr an der Platine einen Taster/Schalter anschliesen, bitte dafür **GND /
 ## Alternative Steuerungen
 
 Wer die Platine nicht mit SHC betreiben möchte, kann diese natürlich auch über einfache TCP Befehle steuern.
+Wer die Relais gegeneinandere verriegeln möchte bitte in der [aktor.lua](/lua-tcp/aktor.lua) zeile 3 `verriegelung = 1 ` damit kann immer nur 1 relais geöffnet sein
 
 ### PHP Script ([tcp.php](/tcp.php))
 
@@ -76,7 +78,7 @@ Wer die Platine nicht mit SHC betreiben möchte, kann diese natürlich auch übe
 
 ### HTTP Rückmeldung
 
-Möchte man Rückmeldungen vom manuellen Schalten auswerten geht dieses via HTTP ( der ESP8266 sendet einen HTTP-GET-REQUEST an eine gewünschte Seite - dazu bitte die Zeilen ([init.lua](/lua-tcp/init.lua)) 6, 7, 8, 128, 133, 141, 145, 156, 160, 168, 172 anpassen.
+Möchte man Rückmeldungen vom manuellen Schalten auswerten geht dieses via HTTP ( der ESP8266 sendet einen HTTP-GET-REQUEST an eine gewünschte Seite - dazu bitte die Zeilen ([aktor.lua](/lua-tcp/aktor.lua)) 4,5,8,11,12,17,18 anpassen.
 
 ### OpenHab
 
@@ -91,10 +93,10 @@ Switch Schalter "Lampe1" {exec=">[ON:php /var/www/tcp.php 192.168.0.62 2x3x1] >[
 *192.168.0.62 ist im obigen Beispiel die IP Adresse des ESP8266*
 
 Für Rückmeldungen in Openhab bitte in der [aktor.lua](/lua-tcp/aktor.lua) folgende zeilen anpassen:
-- in Zeile 3 platform="Openhab"
-- in zeile 18,20 die ip unter der openhab erreichbar ist
-- in zeile 11 ggf den Port anpassen
-- in zeile 154,155 die namen der Items die aktualisiert werden sollen
+- in Zeile 8 platform="Openhab"
+- in zeile 28,30 die ip unter der openhab erreichbar ist
+- in zeile 17 ggf den Port anpassen
+- in zeile 4,5 die namen der Items die aktualisiert werden sollen
 
 
 Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https://openhabdoc.readthedocs.org/de/latest/Beispiel/).
