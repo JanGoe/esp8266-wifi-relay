@@ -131,7 +131,18 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 
 ### Neue Firmware flashen
 
-Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu starten
+Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu starten. Image mit [ESPTOOL](https://github.com/themadinventor/esptool) flashen:
+
+````
+python ./esptool.py --port=/dev/cu.SLAB_USBtoUART  write_flash  -fm=dio -fs=32m 0x00000 ../nodemcu-master-8-modules-2015-09-01-02-42-13-float.bin
+
+Connecting...
+Erasing flash...
+Took 1.62s to erase flash block
+Wrote 415744 bytes at 0x00000000 in 44.8 seconds (74.2 kbit/s)...
+
+Leaving...
+```
 
 ### ![Achtung](/pics/achtung-yellow.png?raw=true) 10A Erweiterung
 
