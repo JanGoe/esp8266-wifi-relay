@@ -1,6 +1,8 @@
 -- openhab support added 22.12.2015
-version = "0.3.1"
-
+version = "0.3.2"
+verriegelung = 0 -- 0 = inaktiv 1=aktiv
+sid1 = "Keller_Lampe" -- fuer openhab itemname fuer shc sid des items
+sid2 = "Schlafzimmer_Lampe1" -- fuer openhab itemname fuer shc sid des items
 -----------------------------------------------
 function send_to_visu(sid, cmd)
   platform = "Openhab"
@@ -143,7 +145,8 @@ tmr.alarm(0, 150, 1, function()
           t = temp
           h = humi
           c:send(t.."|"..h)
-
+        elseif (typ == "9") then
+        c:send(version)
         elseif (typ =="0") then
           node.restart()
         end
@@ -159,8 +162,7 @@ tmr.alarm(0, 150, 1, function()
 
   -- einstellungen fuer schalter
   
-  sid1 = "Schlafzimmer_Lampe"
-  sid2 = "Schlafzimmer_Lampe1"
+
 
   schalter1 = gpio.read(6)
   schalter2 = gpio.read(7)
@@ -227,6 +229,9 @@ tmr.alarm(0, 150, 1, function()
 
   -- fuer relays schalten
   if (lampe1 == 1) then
+    if(verriegelung == 1) then
+        lampe2 = 0
+    end 
     gpio.write(relay1, gpio.LOW)
     --print("s1 low")
   end
@@ -236,6 +241,9 @@ tmr.alarm(0, 150, 1, function()
   end
 
   if (lampe2 == 1) then
+    if(verriegelung == 1) then
+        lampe1 = 0
+    end 
     gpio.write(relay2, gpio.LOW)
     --print("s2 low")
   end
