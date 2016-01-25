@@ -5,7 +5,7 @@
 - WLAN steuerbares 2-Port Relais / oder nur mit 1 Relais bestückt
 - optionale Schalter/Taster Unterstützung (inkl. Feedback)
 - Firmware: [NodeMCU](https://github.com/nodemcu/nodemcu-firmware/blob/master/README.md) 
-- Bestellung über [Ebay](http://www.ebay.de/itm/321975116906?var=&ssPageName=STRK:MESELX:IT&_trksid=p3984.m1558.l2649) in verschienden variationen oder per [mail](mailto:jan.andrea7@googlemail.com)
+- Bestellung über [eBay](http://www.ebay.de/itm/321975116906?var=&ssPageName=STRK:MESELX:IT&_trksid=p3984.m1558.l2649) in verschienden Varianten oder per [Mail](mailto:jan.andrea7@googlemail.com)
 
 ## Installation
 
@@ -103,18 +103,22 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 
 ## Sonstige Informationen
 
+### Stromverbrauch
+
+zwischen 0.6 und 1.2 Watt
+
 ### GPIO Mapping
 
 | GPIO  | PIN | [IO index](https://github.com/nodemcu/nodemcu-firmware/wiki/nodemcu_api_en#gpio-new-table--build-20141219-and-later) | Bemerkung |
 | ------------- | ------------- | ------------- | ------------- |
 | GPIO0 | 18 | 3 | Flashmodus (DS18D20 - ungetestet) |
 | GPIO1 | 22 | 10 | UART TX|
-| GPIO2 | 17 | 4 | LED (blau) |
+| GPIO2 | 17 | 4 | Relais 1 / LED (blau) |
 | GPIO3 | 21 | 9 | UART RX |
-| GPIO4 | 19 | 2 | Relais 1 |
+| GPIO4 | 19 | 2 | *frei* |
 | GPIO5 | 20 | 1 | Relais 2 (oder DHT22) |
-| GPIO9 | 11 | 11 | *ungetestet* |
-| GPIO10 | 12 | 12 | *ungetestet* |
+| GPIO9 | 11 | 11 | nur im DIO Modus nutzbar |
+| GPIO10 | 12 | 12 | nur im DIO Modus nutzbar |
 | GPIO12 | 6 | 6 | Schalter/Taster 1 |
 | GPIO13 | 7 | 7 | Schalter/Taster 2 |
 | GPIO14 | 5 | 5 | *frei* |
@@ -131,7 +135,19 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 
 ### Neue Firmware flashen
 
-Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu starten
+Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu starten. Image mit [ESPTOOL](https://github.com/themadinventor/esptool) flashen:
+
+#### MacOSX (im Beispiel wird NodeMCU "installiert")
+````
+python ./esptool.py --port=/dev/cu.SLAB_USBtoUART  write_flash  -fm=dio -fs=32m 0x00000 ../nodemcu-master-8-modules-2015-09-01-02-42-13-float.bin
+
+Connecting...
+Erasing flash...
+Took 1.62s to erase flash block
+Wrote 415744 bytes at 0x00000000 in 44.8 seconds (74.2 kbit/s)...
+
+Leaving...
+```
 
 ### ![Achtung](/pics/achtung-yellow.png?raw=true) 10A Erweiterung
 
