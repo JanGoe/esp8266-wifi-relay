@@ -5,7 +5,7 @@
 - WLAN steuerbares 2-Port Relais / oder nur mit 1 Relais bestückt
 - optionale Schalter/Taster Unterstützung (inkl. Feedback)
 - Firmware: [NodeMCU](https://github.com/nodemcu/nodemcu-firmware/blob/master/README.md) 
-- Bestellung über [Ebay](http://www.ebay.de/itm/321975116906?var=&ssPageName=STRK:MESELX:IT&_trksid=p3984.m1558.l2649) in verschienden variationen oder per [mail](mailto:jan.andrea7@googlemail.com)
+- Bestellung über [eBay](http://www.ebay.de/itm/321975116906?var=&ssPageName=STRK:MESELX:IT&_trksid=p3984.m1558.l2649) in verschienden Varianten oder per [Mail](mailto:jan.andrea7@googlemail.com)
 
 ## Installation
 
