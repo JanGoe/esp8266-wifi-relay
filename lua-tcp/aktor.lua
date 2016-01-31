@@ -5,6 +5,7 @@ sid1 = "Keller_Lampe" -- fuer openhab itemname fuer shc sid des items
 sid2 = "Schlafzimmer_Lampe1" -- fuer openhab itemname fuer shc sid des items
 -----------------------------------------------
 function send_to_visu(sid, cmd)
+  host = "192.168.0.54"
   platform = "Openhab"
 
   if (platform == "SHC") then
@@ -20,23 +21,23 @@ function send_to_visu(sid, cmd)
   
   print(link)
   
-  conn = net.createConnection(net.TCP, 0)
-  conn:on("receive", function(conn, payload)
-    print(payload) 
-  end)
-  -- senden an shc
-  conn:connect(port,"192.168.0.54")
-  conn:send("GET "..link.." HTTP/1.1\r\n")
-  conn:send("Host: 192.168.0.54\r\n")
-  conn:send("Accept: */*\r\n")
-  conn:send("User-Agent: Mozilla/4.0 (compatible; esp8266 Lua; Windows NT 5.1)\r\n")
-  conn:send("\r\n")
-  conn:on("sent", function(conn)
+    conn=net.createConnection(net.TCP, 0) 
+    conn:on("connection",function(conn, payload)
+    conn:send("GET "..link.. " ".. 
+    "Host: "..host.. "\r\n"..
+    "Accept: /\r\n"..
+    "User-Agent: Mozilla/4.0 (compatible; esp8266 Lua;)"..
+    "\r\n\r\n") 
+    end)
+
+    conn:on("receive", function(conn, payload)
+    print('\nRetrieved in '..((tmr.now()-t)/1000)..' milliseconds.')
+    --print(payload)
     conn:close()
-  end)
-  conn:on("disconnection", function(conn)
-    print("Got disconnection...")
-  end)
+    end) 
+    t = tmr.now()
+
+    conn:connect(80,host)
 
 end
 -----------------------------------------------
