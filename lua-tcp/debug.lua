@@ -1,6 +1,6 @@
 function send_to_visu()
 -- senden an shc
-link = "/debug.php?chipid=" ..node.chipid().. "&heap=" ..node.heap().. "&version=0.3.3&r1="..gpio.read(4).. "&r2=" ..gpio.read(5)
+link = "/debug.php?chipid=" ..node.chipid().. "&heap=" ..node.heap().. "&version="..version.. "&r1="..gpio.read(4).. "&r2=" ..gpio.read(5)
 conn=net.createConnection(net.TCP, 0) 
 conn:on("connection",function(conn, payload)
             conn:send("GET "..link.. " ".. 
