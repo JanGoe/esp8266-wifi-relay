@@ -54,7 +54,7 @@ Das ESP8266-Wifi-Relay lässt sich auch via [MQTT](https://primalcortex.wordpres
 
 Um das ESP8266-Wifi-Relay via Pimatic anzusteuern, ist folgende anpassung in der erforderlich:
 
-- ändert in der aktor.lua Zeile 1 - 45 wiefolgt ab und ladet sie im Anschluss auf euren ESP hoch:
+- Ändert in der aktor.lua Zeile 1 - 45 wiefolgt ab und ladet sie im Anschluss auf euren ESP hoch:
 
 ```
 -- pimatic-edition 02.02.2016
@@ -112,14 +112,14 @@ end
 
   Um die Base64Login-Daten zu erhalten, gebt eure Loginschema auf https://www.base64encode.org/ ein und drückt "encode"
 
-- kopiert nun die tcp.php auf euer RaspberryPi (hier im Beispiel /home/pi/tcp.conf)
+- Kopiert nun die tcp.php auf euer RaspberryPi (hier im Beispiel /home/pi/tcp.conf)
   darin kommentiert ihr nun Zeile 13 aus da es sonst in Pimatic nach einem response zu einer Fehlermeldung kommt
 
  ```  //$filename = $argv[3]; ```
  
-- stellt sicher dass php5 am RaspberryPi installiert ist (ggf. "sudo apt-get install php5") 
+- Stellt sicher dass php5 am RaspberryPi installiert ist (ggf. "sudo apt-get install php5") 
 
-- anschließend fügt ihr folgende Device der Pimatic-konfiguration an:
+- Anschließend fügt ihr folgende Device der Pimatic-Konfiguration an:
 
   ```
       {
