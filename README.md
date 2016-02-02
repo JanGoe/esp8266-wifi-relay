@@ -60,10 +60,10 @@ Um das ESP8266-Wifi-Relay via Pimatic anzusteuern, ist folgende anpassung in der
 -- pimatic-edition 02.02.2016
 version = "0.3.2.pimatic"
 verriegelung = 0 -- 0 = inaktiv 1=aktiv
-sid1 = "Licht_Arbeitszimmer" -- device id aus Pimatic
-sid2 = "Schlafzimmer_Lampe1" -- ev. 2 Device
-PimaticServer = "192.168.8.200" -- Pimatic-Server IP
-BaseLoginPimatic = "YWRtaW46YzRqc2luOGQ=" --Base64-codierter String des Loginschemas "user:passwort" // https://www.base64encode.org/ 
+sid1 = "Licht_Arbeitszimmer"
+sid2 = "Schlafzimmer_Lampe1"
+PimaticServer = "192.168.8.200"
+BaseLoginPimatic = "YWRtaW46YzRqc2luOGQ="
 
 -----------------------------------------------
 function send_to_visu(sid, cmd)
