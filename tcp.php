@@ -10,7 +10,7 @@ if(!empty($argv[0]))
 
 $ip = $argv[1];
 $was = $argv[2];
-$filename = $argv[3];
+@$filename = $argv[3];
 $chipIP = $ip;
 
 }
@@ -55,7 +55,7 @@ foreach ($out as $t)
 						}
 				}
 	}
-## Hier nutzen für neustart!
+## Hier nutzen fÃ¼r neustart!
 	echo "************************ End File ***********************************\n";
 echo "$filenametoESP";
 echo "Sent to ESP!\n";
