@@ -104,7 +104,7 @@ end
 -----------------------------------------------
 ```
 
-- Passt folgende Zeilen eurem Pimatic-Setup an:
+- Konfiguriert nun folgede Zeilen:
   - sid1               -- device-id des Pimatic-Schalters, der Relais 1 schalten soll
   - sid2               -- (falls vorhanden) device-id des Pimatic-Schalters, der Relais 2 schalten soll
   - PimaticServer      -- IP eures Pimatic-Servers
