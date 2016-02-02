@@ -1,5 +1,11 @@
 # ESP8266-Wifi-Relay
 
+## Inhaltsverzeichnis
+* [Quick Setup] (#quick-setup)
+* [SHC Installations anleitung] (#shc-schaltserver)
+* [pimatic Installations anleitung] (#pimatic)
+* [Openhab Anleitung] (#openhab)
+* [Manuele Steuerung über tcp befehle (tcp.php] ( #php-script-tcpphp)
 ## Spezifikation
 
 - WLAN steuerbares 2-Port Relais / oder nur mit 1 Relais bestückt
@@ -52,9 +58,9 @@ Das ESP8266-Wifi-Relay lässt sich auch via [MQTT](https://primalcortex.wordpres
 
 ## Pimatic
 
-Um das ESP8266-Wifi-Relay via Pimatic anzusteuern, ist folgende anpassung in der erforderlich:
+Um das ESP8266-Wifi-Relay via Pimatic anzusteuern, ist folgende anpassung erforderlich:
 
-- Ändert in der aktor.lua Zeile 1 - 45 wiefolgt ab und ladet sie im Anschluss auf euren ESP hoch:
+- Ändert in der [aktor.lua](/lua-tcp/aktor.lua) Zeile 1 - 45 wiefolgt ab:
 
 ```
 -- pimatic-edition 02.02.2016
@@ -104,21 +110,14 @@ end
 -----------------------------------------------
 ```
 
-- Konfiguriert nun folgede Zeilen:
+- Konfiguriert nun folgede Zeilen und Speichert die aktor.lua auf dem ESP8266:
   - sid1               -- device-id des Pimatic-Schalters, der Relais 1 schalten soll
   - sid2               -- (falls vorhanden) device-id des Pimatic-Schalters, der Relais 2 schalten soll
   - PimaticServer      -- IP eures Pimatic-Servers
-  - BaseLoginPimatic   -- Base64-codierter String des Loginschemas "user:passwort" 
-
-  Um die Base64Login-Daten zu erhalten, gebt eure Loginschema auf https://www.base64encode.org/ ein und drückt "encode"
-
-- Kopiert nun die tcp.php auf euer RaspberryPi (hier im Beispiel /home/pi/tcp.conf)
-  darin kommentiert ihr nun Zeile 13 aus da es sonst in Pimatic nach einem response zu einer Fehlermeldung kommt
-
- ```  //$filename = $argv[3]; ```
+  - BaseLoginPimatic   -- Base64-codierter String des Loginschemas "user:passwort" -> Um die Base64Login-Daten zu erhalten, gebt eure Loginschema auf https://www.base64encode.org/ ein und drückt "encode"
  
+- Kopiert nun die tcp.php auf euer RaspberryPi (hier im Beispiel /home/pi/tcp.php) z.b. mit  ```wget https://raw.githubusercontent.com/JanGoe/esp8266-wifi-relay/master/tcp.php```
 - Stellt sicher dass php5 am RaspberryPi installiert ist (ggf. "sudo apt-get install php5") 
-
 - Anschließend fügt ihr folgende Device der Pimatic-Konfiguration an:
 
   ```
@@ -141,14 +140,13 @@ end
 
 ![pimatic-switch](http://www.youscreen.de/gxmqrhwb10.jpg)
 
-
 Funktioniert alles Korrekt, sollten sich im ESPlorer nach manueller Betätigung von "Switch1" folgende Debugzeilen abbilden
 
 ![pimatic-switch-debug](http://www.youscreen.de/skuzwqbs61.jpg)
 
 ... und sich der Schalterzustand in Pimatic entsprechend anpassen.
 
-Bei Umlegen des schalters in Pimatic erscheinen fogende Debugzeilen:
+Bei Umlegen des schalters in Pimatic erscheinen fogende Debugzeilen (im ESPlorer sichtbar):
 
 ![pimatic-switch-debug2](http://www.youscreen.de/yovpflqp16.jpg)
 
