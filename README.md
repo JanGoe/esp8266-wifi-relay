@@ -1,5 +1,11 @@
 # ESP8266-Wifi-Relay
 
+## Inhaltsverzeichnis
+* [Quick Setup] (#quick-setup)
+* [SHC Installations anleitung] (#shc-schaltserver)
+* [pimatic Installations anleitung] (#pimatic)
+* [Openhab Anleitung] (#openhab)
+* [Manuele Steuerung über tcp befehle (tcp.php] ( #php-script-tcpphp)
 ## Spezifikation
 
 - WLAN steuerbares 2-Port Relais / oder nur mit 1 Relais bestückt
@@ -49,6 +55,102 @@ Damit in SHC auch die Rückmeldung funktioniert, wenn manuel schaltet geschaltet
 ## MQTT
 
 Das ESP8266-Wifi-Relay lässt sich auch via [MQTT](https://primalcortex.wordpress.com/2015/02/06/nodemcu-and-mqtt-how-to-start/) steuern/abfragen. Hierfür bitte [init.lua](/lua-mqtt/init.lua) und [aktor.lua](/lua-mqtt/aktor.lua) verwenden (Achtung: die Dateien müssen angepasst werden).
+
+## Pimatic
+
+Um das ESP8266-Wifi-Relay via Pimatic anzusteuern, ist folgende anpassung erforderlich:
+
+- Ändert in der [aktor.lua](/lua-tcp/aktor.lua) Zeile 1 - 45 wiefolgt ab:
+
+```
+-- pimatic-edition 02.02.2016
+version = "0.3.2.pimatic"
+verriegelung = 0 -- 0 = inaktiv 1=aktiv
+sid1 = "Licht_Arbeitszimmer"
+sid2 = "Schlafzimmer_Lampe1"
+PimaticServer = "192.168.8.200"
+BaseLoginPimatic = "YWRtaW46YzRqc2luOGQ="
+
+-----------------------------------------------
+function send_to_visu(sid, cmd)
+  platform = "Pimatic"
+
+  if (platform == "Pimatic") then
+    if (cmd == 1) then switch="true" elseif (cmd == 0) then switch="false" end
+      port = 80
+      link = "/api/device/"..sid.."/changeStateTo?state="..switch..""
+    end
+
+  if (platform == "Openhab") then
+    if (cmd == 1) then switch="ON" elseif (cmd == 0) then switch="OFF" end
+      port = 8080
+      link = "/CMD?" ..sid.."=" ..switch
+  end
+
+print(link)
+  
+    conn=net.createConnection(net.TCP, 0) 
+    conn:on("receive", function(conn, payload) print(payload) end )
+    conn:send("GET "..link.." HTTP/1.1\r\n")
+    conn:send("Authorization: Basic "..BaseLoginPimatic.."\r\n")
+    conn:send("Host: "..PimaticServer.."\r\n")
+    conn:send("Content-Type:application/json\r\n")
+    conn:send("Connection: close\r\n")
+    conn:send("Accept: */*\r\n\r\n")  
+    conn:on("receive", function(conn, payload)
+    print('Retrieved in '..((tmr.now()-t)/1000)..' milliseconds.\n')
+    --print(payload)
+    conn:close()
+    end) 
+    t = tmr.now()
+    
+    conn:connect(port,PimaticServer)
+
+end
+-----------------------------------------------
+```
+
+- Konfiguriert nun folgede Zeilen und Speichert die aktor.lua auf dem ESP8266:
+  - sid1               -- device-id des Pimatic-Schalters, der Relais 1 schalten soll
+  - sid2               -- (falls vorhanden) device-id des Pimatic-Schalters, der Relais 2 schalten soll
+  - PimaticServer      -- IP eures Pimatic-Servers
+  - BaseLoginPimatic   -- Base64-codierter String des Loginschemas "user:passwort" -> Um die Base64Login-Daten zu erhalten, gebt eure Loginschema auf https://www.base64encode.org/ ein und drückt "encode"
+ 
+- Kopiert nun die tcp.php auf euer RaspberryPi (hier im Beispiel /home/pi/tcp.php) z.b. mit  ```wget https://raw.githubusercontent.com/JanGoe/esp8266-wifi-relay/master/tcp.php```
+- Stellt sicher dass php5 am RaspberryPi installiert ist (ggf. "sudo apt-get install php5") 
+- Anschließend fügt ihr folgende Device der Pimatic-Konfiguration an:
+
+  ```
+      {
+      "id": "Licht_Arbeitszimmer",
+      "name": "Lamp",
+      "class": "ShellSwitch",
+      "onCommand": "php /home/pi/tcp.php 192.168.8.3 2x4x1",
+      "offCommand": "php /home/pi/tcp.php 192.168.8.3 2x4x0",
+      "getStateCommand": "echo false",
+      "interval": 0
+    }
+  ```
+  - id               -- muss mit der "sid" des ESP's übereinstimmen
+  - name             -- kann frei gewählt werden
+  - onCommand        -- Einschaltbefehl "php <pfad/der/tcp.php> <ip-des-esp> <funktion>" die Kommandos findet ihr im Abschnitt "PHP Script"
+  - offCommand       -- Ausschaltbefehl
+  - getStateCommand  -- Befehl, der zur Schalterzustandaktualisierung verwendet wird. Dieser muss nicht verwendet werden da der Schalter seinen Zustand an Pimatic übermittelt
+  - interval         -- Häufigkeit der Abfrage des Schalterzustandes in Millisekunden
+
+![pimatic-switch](http://www.youscreen.de/gxmqrhwb10.jpg)
+
+Funktioniert alles Korrekt, sollten sich im ESPlorer nach manueller Betätigung von "Switch1" folgende Debugzeilen abbilden
+
+![pimatic-switch-debug](http://www.youscreen.de/skuzwqbs61.jpg)
+
+... und sich der Schalterzustand in Pimatic entsprechend anpassen.
+
+Bei Umlegen des schalters in Pimatic erscheinen fogende Debugzeilen (im ESPlorer sichtbar):
+
+![pimatic-switch-debug2](http://www.youscreen.de/yovpflqp16.jpg)
+
+
 
 ## Manuelle Steuerung
 
