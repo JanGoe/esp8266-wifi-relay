@@ -229,6 +229,10 @@ zwischen 0.6 und 1.2 Watt
 
 ![Pinout](/pics/esp8266-pin.png?raw=true)
 
+### Schaltplan / Schema
+
+![Schema](/pics/schema.png?raw=true)
+
 ### Platinen Maße
 
 - 48 mm breit (stark abgerundete Ecken)
