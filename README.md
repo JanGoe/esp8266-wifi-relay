@@ -1,11 +1,13 @@
 # ESP8266-Wifi-Relay
 
 ## Inhaltsverzeichnis
+
 * [Quick Setup] (#quick-setup)
-* [SHC Installations anleitung] (#shc-schaltserver)
-* [pimatic Installations anleitung] (#pimatic)
-* [Openhab Anleitung] (#openhab)
-* [Manuele Steuerung über tcp befehle (tcp.php] ( #php-script-tcpphp)
+* [SHC Installations Anleitung] (#shc-schaltserver)
+* [piMatic Installations Anleitung] (#pimatic)
+* [OpenHab Anleitung] (#openhab)
+* [Manuelle Steuerung über tcp befehle (tcp.php)] ( #php-script-tcpphp)
+
 ## Spezifikation
 
 - WLAN steuerbares 2-Port Relais / oder nur mit 1 Relais bestückt
