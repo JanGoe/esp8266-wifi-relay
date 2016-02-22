@@ -7,6 +7,7 @@
 * [piMatic Installations Anleitung] (#pimatic)
 * [OpenHab Anleitung] (#openhab)
 * [Manuelle Steuerung über tcp befehle (tcp.php)] ( #php-script-tcpphp)
+* [Schaltplan/Schema] ( #schaltplan--schema)
 
 ## Spezifikation
 
