@@ -1,42 +1,101 @@
-wifi.sta.disconnect()
+--Modified by Andy Reischle Based on XChip's NodeMCU IDE
 tmr.delay(1000)
-wifi.setmode(wifi.STATIONAP)
-tmr.delay(1000)
+wifi.setmode(wifi.SOFTAP)
+cfg={}
+cfg.ssid="RelaySetup"
+wifi.ap.config(cfg)
+dofile ("dns-liar.lua")
 
-pl = nil;
-count = 0
--- create a server
-sv = net.createServer(net.TCP, 10)
--- server listen on 80
-sv:listen(80, function(conn)
-  conn:on("receive", function(conn, pl)
-    payload = pl;
-    print(pl.."\n")
-    ------------------------------------------------------------------------
-    if string.find(pl, "set") then
-      file.open("set.html", "r")
-      conn:send("\n")
-      conn:send(file.read())
-      file.close("set.html")
+srv=net.createServer(net.TCP) 
+srv:listen(80, function(conn) 
+
+   local rnrn=0
+   local Status = 0
+   local responseBytes = 0
+   local method=""
+   local url=""
+   local vars=""
+
+   conn:on("receive",function(conn, payload)
+  
+    if Status==0 then
+        _, _, method, url, vars = string.find(payload, "([A-Z]+) /([^?]*)%??(.*) HTTP")
+        -- print(method, url, vars)                          
     end
+    if vars~=nil and parse_wifi_credentials(vars) then
+        node.restart()
+    end
+
+    if url == "favicon.ico" then
+        conn:send("HTTP/1.1 404 file not found")
+        responseBytes = -1
+        return
+    end    
+
+    -- Only support one sending one file
+    url="set.html"
+    responseBytes = 0
     
-    if string.find(pl, "set1") then
-      test = {string.find(pl, "ssid=")}
-      test2 = {string.find(pl, "&pwd=")}
-      test3 = {string.find(pl, "&senden=")}
-      ssid = string.sub(pl, test[2]+1, test2[1]-1)
-      pwd = string.sub(pl, test2[2]+1, test3[1]-1)
+    conn:send("HTTP/1.1 200 OK\r\n\r\n")
+    
+  end)
+  
+  conn:on("sent",function(conn) 
+    if responseBytes>=0 and method=="GET" then
+        if file.open(url, "r") then            
+            file.seek("set", responseBytes)
+            local line=file.read(512)
+            file.close()
+            if line then
+                conn:send(line)
+                responseBytes = responseBytes + 512    
 
-      print("SSID:"..ssid.." PWD:"..pwd)
-      
-      wifi.setmode(wifi.STATION)
-      wifi.sta.config(ssid,pwd)   ---   SSID and Password for your LAN DHCP here
-      wifi.sta.connect()
-      
-      node.restart()
+                if (string.len(line)==512) then
+                    return
+                end
+            end
+        end        
     end
-    conn:close()
-    collectgarbage()
+
+    conn:close() 
   end)
 end)
-print("Server running...")
+print("HTTP Server: Started")
+
+function hex_to_char(x)
+  return string.char(tonumber(x, 16))
+end
+
+function unescape(url)
+  return url:gsub("%%(%x%x)", hex_to_char)
+end
+
+function parse_wifi_credentials(vars)
+    if vars == nil or vars == "" then
+        return false
+    end
+
+    local _, _, wifi_ssid = string.find(vars, "ssid\=([^&]+)")
+    local _, _, wifi_password = string.find(vars, "pwd\=([^&]+)")
+    wifi_ssid = unescape(wifi_ssid) 
+    wifi_password = unescape(wifi_password)
+    if wifi_ssid == nil or wifi_ssid == "" or wifi_password == nil then
+        return false
+    end
+
+    pwd_len = string.len(wifi_password)
+    if pwd_len ~= 0 and (pwd_len < 8 or pwd_len > 64) then
+        print("Password length should be between 8 and 64 characters")
+        return false
+    end
+
+    print("Neue WiFi Zugangsdaten erhalten")
+    print("-----------------------------")
+    print("wifi_ssid     : " .. wifi_ssid)
+    print("wifi_password : " .. wifi_password)
+      wifi.setmode(wifi.STATION)
+      wifi.sta.config(wifi_ssid,wifi_password)
+      wifi.sta.connect()
+     
+    return true
+end

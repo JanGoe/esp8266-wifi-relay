@@ -1,11 +1,17 @@
 # ESP8266-Wifi-Relay
 
+## Inhaltsverzeichnis
+* [Quick Setup] (#quick-setup)
+* [SHC Installations anleitung] (#shc-schaltserver)
+* [pimatic Installations anleitung] (#pimatic)
+* [Openhab Anleitung] (#openhab)
+* [Manuele Steuerung über tcp befehle (tcp.php] ( #php-script-tcpphp)
 ## Spezifikation
 
 - WLAN steuerbares 2-Port Relais / oder nur mit 1 Relais bestückt
 - optionale Schalter/Taster Unterstützung (inkl. Feedback)
 - Firmware: [NodeMCU](https://github.com/nodemcu/nodemcu-firmware/blob/master/README.md) 
-- Bestellung über [Ebay](http://www.ebay.de/itm/321975116906?var=&ssPageName=STRK:MESELX:IT&_trksid=p3984.m1558.l2649) in verschienden variationen oder per [mail](mailto:jan.andrea7@googlemail.com)
+- Bestellung über [eBay](http://www.ebay.de/itm/321975116906?var=&ssPageName=STRK:MESELX:IT&_trksid=p3984.m1558.l2649) in verschienden Varianten oder per [Mail](mailto:jan.andrea7@googlemail.com)
 
 ## Installation
 
@@ -17,7 +23,7 @@
 
 ### Quick Setup
 
-A) Beim ersten Start des ESP8266-Wifi-Relay wird ein **HOTSPOT** (nach ca. 10 Sekunden leuchtet die Blaue LED am ESP8266 3x kurz / das Relais schaltet 3x) mit der SSID: **ESP_XXXX** erstellt. Sobald man mit diesem Hotspot verbunden ist, kann man auf `http://192.168.4.1/set` die Zugangsdaten des eigenen WLAN-Netzes eingeben. Nach dem Speichern der Daten, startet der ESP8266 neu und versucht sich zu verbinden. Im Fehlerfall (WLAN nicht erreichbar, Zugangsdaten falsch) beginnt das ESP8266-Wifi-Relay wieder bei Schritt **A)**
+A) Beim ersten Start des ESP8266-Wifi-Relay wird ein **HOTSPOT** (nach ca. 10 Sekunden leuchtet die Blaue LED am ESP8266 3x kurz / das Relais schaltet 3x) mit der SSID: **RelaySetup** erstellt. Sobald man mit diesem Hotspot verbunden ist, kann man auf `http://192.168.4.1/set` die Zugangsdaten des eigenen WLAN-Netzes eingeben. Nach dem Speichern der Daten, startet der ESP8266 neu und versucht sich zu verbinden. Im Fehlerfall (WLAN nicht erreichbar, Zugangsdaten falsch) beginnt das ESP8266-Wifi-Relay wieder bei Schritt **A)**
 
 Sofern alles geklappt hat, startet der TCP-Server auf Port 9274 und es können Befehle ausführt werden (z.b. Dateien auf den ESP8266 übertragen - siehe Befehls-Tabelle weiter unten)
 
@@ -49,6 +55,102 @@ Damit in SHC auch die Rückmeldung funktioniert, wenn manuel schaltet geschaltet
 ## MQTT
 
 Das ESP8266-Wifi-Relay lässt sich auch via [MQTT](https://primalcortex.wordpress.com/2015/02/06/nodemcu-and-mqtt-how-to-start/) steuern/abfragen. Hierfür bitte [init.lua](/lua-mqtt/init.lua) und [aktor.lua](/lua-mqtt/aktor.lua) verwenden (Achtung: die Dateien müssen angepasst werden).
+
+## Pimatic
+
+Um das ESP8266-Wifi-Relay via Pimatic anzusteuern, ist folgende anpassung erforderlich:
+
+- Ändert in der [aktor.lua](/lua-tcp/aktor.lua) Zeile 1 - 45 wiefolgt ab:
+
+```
+-- pimatic-edition 02.02.2016
+version = "0.3.2.pimatic"
+verriegelung = 0 -- 0 = inaktiv 1=aktiv
+sid1 = "Licht_Arbeitszimmer"
+sid2 = "Schlafzimmer_Lampe1"
+PimaticServer = "192.168.8.200"
+BaseLoginPimatic = "YWRtaW46YzRqc2luOGQ="
+
+-----------------------------------------------
+function send_to_visu(sid, cmd)
+  platform = "Pimatic"
+
+  if (platform == "Pimatic") then
+    if (cmd == 1) then switch="true" elseif (cmd == 0) then switch="false" end
+      port = 80
+      link = "/api/device/"..sid.."/changeStateTo?state="..switch..""
+    end
+
+  if (platform == "Openhab") then
+    if (cmd == 1) then switch="ON" elseif (cmd == 0) then switch="OFF" end
+      port = 8080
+      link = "/CMD?" ..sid.."=" ..switch
+  end
+
+print(link)
+  
+    conn=net.createConnection(net.TCP, 0) 
+    conn:on("receive", function(conn, payload) print(payload) end )
+    conn:send("GET "..link.." HTTP/1.1\r\n")
+    conn:send("Authorization: Basic "..BaseLoginPimatic.."\r\n")
+    conn:send("Host: "..PimaticServer.."\r\n")
+    conn:send("Content-Type:application/json\r\n")
+    conn:send("Connection: close\r\n")
+    conn:send("Accept: */*\r\n\r\n")  
+    conn:on("receive", function(conn, payload)
+    print('Retrieved in '..((tmr.now()-t)/1000)..' milliseconds.\n')
+    --print(payload)
+    conn:close()
+    end) 
+    t = tmr.now()
+    
+    conn:connect(port,PimaticServer)
+
+end
+-----------------------------------------------
+```
+
+- Konfiguriert nun folgede Zeilen und Speichert die aktor.lua auf dem ESP8266:
+  - sid1               -- device-id des Pimatic-Schalters, der Relais 1 schalten soll
+  - sid2               -- (falls vorhanden) device-id des Pimatic-Schalters, der Relais 2 schalten soll
+  - PimaticServer      -- IP eures Pimatic-Servers
+  - BaseLoginPimatic   -- Base64-codierter String des Loginschemas "user:passwort" -> Um die Base64Login-Daten zu erhalten, gebt eure Loginschema auf https://www.base64encode.org/ ein und drückt "encode"
+ 
+- Kopiert nun die tcp.php auf euer RaspberryPi (hier im Beispiel /home/pi/tcp.php) z.b. mit  ```wget https://raw.githubusercontent.com/JanGoe/esp8266-wifi-relay/master/tcp.php```
+- Stellt sicher dass php5 am RaspberryPi installiert ist (ggf. "sudo apt-get install php5") 
+- Anschließend fügt ihr folgende Device der Pimatic-Konfiguration an:
+
+  ```
+      {
+      "id": "Licht_Arbeitszimmer",
+      "name": "Lamp",
+      "class": "ShellSwitch",
+      "onCommand": "php /home/pi/tcp.php 192.168.8.3 2x4x1",
+      "offCommand": "php /home/pi/tcp.php 192.168.8.3 2x4x0",
+      "getStateCommand": "echo false",
+      "interval": 0
+    }
+  ```
+  - id               -- muss mit der "sid" des ESP's übereinstimmen
+  - name             -- kann frei gewählt werden
+  - onCommand        -- Einschaltbefehl "php <pfad/der/tcp.php> <ip-des-esp> <funktion>" die Kommandos findet ihr im Abschnitt "PHP Script"
+  - offCommand       -- Ausschaltbefehl
+  - getStateCommand  -- Befehl, der zur Schalterzustandaktualisierung verwendet wird. Dieser muss nicht verwendet werden da der Schalter seinen Zustand an Pimatic übermittelt
+  - interval         -- Häufigkeit der Abfrage des Schalterzustandes in Millisekunden
+
+![pimatic-switch](http://www.youscreen.de/gxmqrhwb10.jpg)
+
+Funktioniert alles Korrekt, sollten sich im ESPlorer nach manueller Betätigung von "Switch1" folgende Debugzeilen abbilden
+
+![pimatic-switch-debug](http://www.youscreen.de/skuzwqbs61.jpg)
+
+... und sich der Schalterzustand in Pimatic entsprechend anpassen.
+
+Bei Umlegen des schalters in Pimatic erscheinen fogende Debugzeilen (im ESPlorer sichtbar):
+
+![pimatic-switch-debug2](http://www.youscreen.de/yovpflqp16.jpg)
+
+
 
 ## Manuelle Steuerung
 
@@ -103,18 +205,22 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 
 ## Sonstige Informationen
 
+### Stromverbrauch
+
+zwischen 0.6 und 1.2 Watt
+
 ### GPIO Mapping
 
 | GPIO  | PIN | [IO index](https://github.com/nodemcu/nodemcu-firmware/wiki/nodemcu_api_en#gpio-new-table--build-20141219-and-later) | Bemerkung |
 | ------------- | ------------- | ------------- | ------------- |
 | GPIO0 | 18 | 3 | Flashmodus (DS18D20 - ungetestet) |
 | GPIO1 | 22 | 10 | UART TX|
-| GPIO2 | 17 | 4 | LED (blau) |
+| GPIO2 | 17 | 4 | Relais 1 / LED (blau) |
 | GPIO3 | 21 | 9 | UART RX |
-| GPIO4 | 19 | 2 | Relais 1 |
+| GPIO4 | 19 | 2 | *frei* |
 | GPIO5 | 20 | 1 | Relais 2 (oder DHT22) |
-| GPIO9 | 11 | 11 | *ungetestet* |
-| GPIO10 | 12 | 12 | *ungetestet* |
+| GPIO9 | 11 | 11 | nur im DIO Modus nutzbar |
+| GPIO10 | 12 | 12 | nur im DIO Modus nutzbar |
 | GPIO12 | 6 | 6 | Schalter/Taster 1 |
 | GPIO13 | 7 | 7 | Schalter/Taster 2 |
 | GPIO14 | 5 | 5 | *frei* |
@@ -131,7 +237,19 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 
 ### Neue Firmware flashen
 
-Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu starten
+Programmiermodus: **GPIO0** und **GND** mit einem Jumper verbinden, ESP8266 neu starten. Image mit [ESPTOOL](https://github.com/themadinventor/esptool) flashen:
+
+#### MacOSX (im Beispiel wird NodeMCU "installiert")
+````
+python ./esptool.py --port=/dev/cu.SLAB_USBtoUART  write_flash  -fm=dio -fs=32m 0x00000 ../nodemcu-master-8-modules-2015-09-01-02-42-13-float.bin
+
+Connecting...
+Erasing flash...
+Took 1.62s to erase flash block
+Wrote 415744 bytes at 0x00000000 in 44.8 seconds (74.2 kbit/s)...
+
+Leaving...
+```
 
 ### ![Achtung](/pics/achtung-yellow.png?raw=true) 10A Erweiterung
 

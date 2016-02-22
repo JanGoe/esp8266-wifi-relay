@@ -1,12 +1,12 @@
 -- openhab support added 22.12.2015
 version = "0.3.2"
 verriegelung = 0 -- 0 = inaktiv 1=aktiv
-sid1 = "Keller_Lampe" -- fuer openhab itemname fuer shc sid des items
-sid2 = "Schlafzimmer_Lampe1" -- fuer openhab itemname fuer shc sid des items
+sid1 = "21" -- fuer openhab itemname fuer shc sid des items
+sid2 = "22" -- fuer openhab itemname fuer shc sid des items
 -----------------------------------------------
 function send_to_visu(sid, cmd)
-  host = "192.168.0.54"
-  platform = "Openhab"
+  host = "192.168.0.27"
+  platform = "SHC"
 
   if (platform == "SHC") then
     port = 80
@@ -44,19 +44,8 @@ end
 function read_temp(pin)
   --pin = 4
   status, temp, humi, temp_decimial, humi_decimial = dht.read(pin)
+  print("DHT Temperature:"..temp..";".."Humidity:"..humi)
   if (status == dht.OK) then
-  -- Integer firmware using this example
-  --  print(
-  --    string.format(
-  --      "DHT Temperature:%d.%03d;Humidity:%d.%03d\r\n",
-  --      math.floor(temp),
-  --      temp_decimial,
-  --      math.floor(humi),
-  --      humi_decimial
-  --    )
-  --  )
-  -- Float firmware using this example
-  --print("DHT Temperature:"..temp..";".."Humidity:"..humi)
   elseif (status == dht.ERROR_CHECKSUM) then
     print("DHT Checksum error.");
   elseif (status == dht.ERROR_TIMEOUT) then
@@ -78,8 +67,8 @@ print("wait")
 ipshow = 0 -- damit nach empfangen der ip, tcp server startet
 push = 0
 change = 5
-p1 = 1
-p2 = 1
+p1 = 0
+p2 = 0
 
 lampe1 = 0 -- 0 = aus
 lampe2 = 0
@@ -171,62 +160,39 @@ tmr.alarm(0, 150, 1, function()
   status1 = gpio.read(4)
   status2 = gpio.read(5)
 
-  -- fuer schalter1
-  if (schalter1 == 0 and p1 ~= schalter1) then
-    p1 = 0
-    --print("debug if 1")
-    if (lampe1 == 0) then
-      lampe1 = 1
-      --print("licht zu lampe1 = 1")
-      send_to_visu(sid1, status1)
+-- für TASTER lampe2
+ if(schalter1 == 0 and p1 == 0) then 
+    p1 = 1 
+    if(lampe1 == 1) then 
+        lampe1 = 0 
+        send_to_visu(sid1, status1)
+    elseif(lampe1 == 0) then 
+        lampe1 = 1 
+        send_to_visu(sid1, status1)
+        end
+ print("schalter1 = 0 und lampe2="..lampe1) 
+ 
+ end
+  if(schalter1 == 1 and p1 == 1) then 
+   p1 = 0
+  end
 
-    elseif (lampe1 == 1) then
-      lampe1 = 0
-      --print("licht zu lampe1 = 0")
-      send_to_visu(sid1, status1)
-    end
-  elseif (schalter1 == 1 and p1 ~= schalter1) then
-    p1 = 1
-    --print("debug if 2")
-    if (lampe1 == 0) then
-      lampe1 = 1
-      -- print("licht zu lampe1 = 1")
-      send_to_visu(sid1, status1)
-    elseif (lampe1 == 1) then
-      lampe1 = 0
-      --print("licht zu lampe1 = 0")
-      send_to_visu(sid1, status1)
-    end
-  end
-  -- end fuer schalter 1
-  
-  -- fuer schalter2
-  if (schalter2 == 0 and p2 ~= schalter2) then
-    p2 = 0
-    --print("debug2 if 1")
-    if (lampe2 == 0) then
-      lampe2 = 1
-      --print("licht zu lampe2 = 1")
-      send_to_visu(sid2, status2)
-    elseif (lampe2 == 1) then
-      lampe2 = 0
-      -- print("licht zu lampe2 = 0")
-      send_to_visu(sid2, status2)
-    end
-  elseif (schalter2 == 1 and p2 ~= schalter2) then
+-- für TASTER lampe2
+ if(schalter2 == 0 and p2 == 0) then 
     p2 = 1
-    --print("debug2 if 2")
-    if (lampe2 == 0) then
-      lampe2 = 1
-      --print("licht zu lampe2 = 1")
-      send_to_visu(sid2, status2)
-    elseif (lampe2 == 1) then
-      lampe2 = 0
-      -- print("licht zu lampe2 = 0")
-      send_to_visu(sid2, status2)
-    end
-  end
-  -- end fuer schalter 2
+    if(lampe2 == 1) then 
+        lampe2 = 0 
+        send_to_visu(sid2, status2)
+    elseif(lampe2 == 0) then 
+        lampe2 = 1 
+        send_to_visu(sid2, status2)
+        end
+ print("schalter2 = 0 und lampe2="..lampe2) 
+ end
+
+ if(schalter2 == 1 and p2 == 1) then 
+  p2 = 0
+ end
 
   -- fuer relays schalten
   if (lampe1 == 1) then
