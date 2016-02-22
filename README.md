@@ -1,11 +1,13 @@
 # ESP8266-Wifi-Relay
 
 ## Inhaltsverzeichnis
+
 * [Quick Setup] (#quick-setup)
-* [SHC Installations anleitung] (#shc-schaltserver)
-* [pimatic Installations anleitung] (#pimatic)
-* [Openhab Anleitung] (#openhab)
-* [Manuele Steuerung über tcp befehle (tcp.php] ( #php-script-tcpphp)
+* [SHC Installations Anleitung] (#shc-schaltserver)
+* [piMatic Installations Anleitung] (#pimatic)
+* [OpenHab Anleitung] (#openhab)
+* [Manuelle Steuerung über tcp befehle (tcp.php)] ( #php-script-tcpphp)
+
 ## Spezifikation
 
 - WLAN steuerbares 2-Port Relais / oder nur mit 1 Relais bestückt
@@ -228,6 +230,10 @@ zwischen 0.6 und 1.2 Watt
 | GPIO16 | 4 | 0 | *frei* |
 
 ![Pinout](/pics/esp8266-pin.png?raw=true)
+
+### Schaltplan / Schema
+
+![Schema](/pics/schema.png?raw=true)
 
 ### Platinen Maße
 
