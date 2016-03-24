@@ -62,6 +62,13 @@ srv:listen(80, function(conn)
 end)
 print("HTTP Server: Started")
 
+function hex_to_char(x)
+  return string.char(tonumber(x, 16))
+end
+
+function unescape(url)
+  return url:gsub("%%(%x%x)", hex_to_char)
+end
 
 function parse_wifi_credentials(vars)
     if vars == nil or vars == "" then
@@ -70,7 +77,8 @@ function parse_wifi_credentials(vars)
 
     local _, _, wifi_ssid = string.find(vars, "ssid\=([^&]+)")
     local _, _, wifi_password = string.find(vars, "pwd\=([^&]+)")
-
+    wifi_ssid = unescape(wifi_ssid) 
+    wifi_password = unescape(wifi_password)
     if wifi_ssid == nil or wifi_ssid == "" or wifi_password == nil then
         return false
     end
