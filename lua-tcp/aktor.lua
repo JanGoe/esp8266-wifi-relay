@@ -1,8 +1,13 @@
--- openhab support added 22.12.2015
-version = "0.3.2"
+version = "0.3.3"
+-- einstellungen 
 verriegelung = 0 -- 0 = inaktiv 1=aktiv
-sid1 = "Keller_Lampe" -- fuer openhab itemname fuer shc sid des items
-sid2 = "Schlafzimmer_Lampe1" -- fuer openhab itemname fuer shc sid des items
+ctimer = 0 -- 0= inaktiv 1=aktiv
+r1_timer = 10 -- zeit in Sek fuer relay 1
+r2_timer = 10 -- zeit in Sek fuer relay 2
+sid1 = "Test_Light1" -- fuer openhab itemname fuer shc sid des items
+sid2 = "Test_Light2" -- fuer openhab itemname fuer shc sid des items
+tmr.stop(5)
+tmr.stop(6)
 -----------------------------------------------
 function send_to_visu(sid, cmd)
   host = "192.168.0.54"
@@ -45,18 +50,6 @@ function read_temp(pin)
   --pin = 4
   status, temp, humi, temp_decimial, humi_decimial = dht.read(pin)
   if (status == dht.OK) then
-  -- Integer firmware using this example
-  --  print(
-  --    string.format(
-  --      "DHT Temperature:%d.%03d;Humidity:%d.%03d\r\n",
-  --      math.floor(temp),
-  --      temp_decimial,
-  --      math.floor(humi),
-  --      humi_decimial
-  --    )
-  --  )
-  -- Float firmware using this example
-  --print("DHT Temperature:"..temp..";".."Humidity:"..humi)
   elseif (status == dht.ERROR_CHECKSUM) then
     print("DHT Checksum error.");
   elseif (status == dht.ERROR_TIMEOUT) then
@@ -69,8 +62,6 @@ end
 --------------------------------------------------
 -- wlan verbinden
 -----------------------------------------------
-
----------------------------------
 print("wait")
 -----------------------------------------------------
 -- befehle ueber TCP empfangen
@@ -160,18 +151,13 @@ tmr.alarm(0, 150, 1, function()
     end)
     -- end ipshow if
   end
-
   -- einstellungen fuer schalter
-  
-
-
   schalter1 = gpio.read(6)
   schalter2 = gpio.read(7)
 
   status1 = gpio.read(4)
   status2 = gpio.read(5)
-
-  -- fuer schalter1
+    -- fuer schalter1
   if (schalter1 == 0 and p1 ~= schalter1) then
     p1 = 0
     --print("debug if 1")
@@ -233,6 +219,9 @@ tmr.alarm(0, 150, 1, function()
     if(verriegelung == 1) then
         lampe2 = 0
     end 
+    if(ctimer == 1) then 
+    tmr.start(6) 
+    end
     gpio.write(relay1, gpio.LOW)
     --print("s1 low")
   end
@@ -245,6 +234,9 @@ tmr.alarm(0, 150, 1, function()
     if(verriegelung == 1) then
         lampe1 = 0
     end 
+    if(ctimer == 1) then 
+    tmr.start(5) 
+    end
     gpio.write(relay2, gpio.LOW)
     --print("s2 low")
   end
@@ -255,3 +247,16 @@ tmr.alarm(0, 150, 1, function()
 
   -- end tmr funktion
 end)
+
+tmr.alarm(6, r1_timer*1000, 1, function()
+if(ctimer == 1) then
+lampe1=0
+end
+tmr.stop(6)
+end )
+tmr.alarm(5, r2_timer*1000, 1, function()
+if(ctimer == 1) then
+lampe2=0
+end
+tmr.stop(5)
+end )
