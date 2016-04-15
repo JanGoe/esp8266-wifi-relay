@@ -211,8 +211,8 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 
 ### Stromverbrauch
 
-Version 2 - NC Version: zwischen 0.6 und 1.2 Watt
-Version 2 - NO Version: zwischen 0.3 und 1.2 Watt
+- Version 2 - NC Version: zwischen 0.6 (Standby) und 1.2 Watt
+- Version 2 - NO Version: zwischen 0.3 (Standby) und 1.2 Watt
 
 ### GPIO Mapping
 
