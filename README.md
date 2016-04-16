@@ -2,12 +2,15 @@
 
 ## Inhaltsverzeichnis
 
-* [Quick Setup] (#quick-setup)
-* [SHC Installations Anleitung] (#shc-schaltserver)
+* [Spezifikation] (#spezifikation)
+* [Installation] (#installation)
+* [Konfiguration] (#konfiguration)
+* [SHC Schaltserver] (#shc-schaltserver)
+* [MQTT] (#mqtt)
 * [piMatic Installations Anleitung] (#pimatic)
-* [OpenHab Anleitung] (#openhab)
-* [Manuelle Steuerung über tcp befehle (tcp.php)] ( #php-script-tcpphp)
-* [Schaltplan/Schema] ( #schaltplan--schema)
+* [Manuelle Steuerung] (#manuelle-steuerung)
+* [Alternative Steuerungen] (#alternative-steuerungen)
+* [Sonstige Informationen] (#sonstige-informationen)
 
 ## Spezifikation
 
@@ -153,8 +156,6 @@ Bei Umlegen des schalters in Pimatic erscheinen fogende Debugzeilen (im ESPlorer
 
 ![pimatic-switch-debug2](http://www.youscreen.de/yovpflqp16.jpg)
 
-
-
 ## Manuelle Steuerung
 
 Wollt ihr an der Platine einen Taster/Schalter anschliesen, bitte dafür **GND / GPIO12** und  **GND / GPIO13** nutzen ( schaltet nach **GND** ) 
@@ -210,25 +211,24 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 
 ### Stromverbrauch
 
-zwischen 0.6 und 1.2 Watt
+- Version 2 - NC Version: zwischen 0.6 (Standby) und 1.2 Watt
+- Version 2 - NO Version: zwischen 0.3 (Standby) und 1.2 Watt
 
 ### GPIO Mapping
 
 | GPIO  | PIN | [IO index](https://github.com/nodemcu/nodemcu-firmware/wiki/nodemcu_api_en#gpio-new-table--build-20141219-and-later) | Bemerkung |
 | ------------- | ------------- | ------------- | ------------- |
-| GPIO0 | 18 | 3 | Flashmodus (DS18D20 - ungetestet) |
+| GPIO0 | 18 | 3 | Flashmodus (wenn auf GND) (DS18D20 - ungetestet) |
 | GPIO1 | 22 | 10 | UART TX|
 | GPIO2 | 17 | 4 | Relais 1 / LED (blau) |
 | GPIO3 | 21 | 9 | UART RX |
 | GPIO4 | 19 | 2 | *frei* |
 | GPIO5 | 20 | 1 | Relais 2 (oder DHT22) |
-| GPIO9 | 11 | 11 | nur im DIO Modus nutzbar |
-| GPIO10 | 12 | 12 | nur im DIO Modus nutzbar |
 | GPIO12 | 6 | 6 | Schalter/Taster 1 |
 | GPIO13 | 7 | 7 | Schalter/Taster 2 |
 | GPIO14 | 5 | 5 | *frei* |
 | GPIO15 | 16 | 8 | *frei* |
-| GPIO16 | 4 | 0 | *frei* |
+| GPIO16 | 4 | 0 | sollte nicht genutzt werden (wird für Deep Sleep Mode verwendet) |
 
 ![Pinout](/pics/esp8266-pin.png?raw=true)
 
@@ -258,21 +258,23 @@ Wrote 415744 bytes at 0x00000000 in 44.8 seconds (74.2 kbit/s)...
 Leaving...
 ```
 
-### ![Achtung](/pics/achtung-yellow.png?raw=true) 10A Erweiterung
+### 10A Erweiterung
 
-Obwohl die Relais mit 10A belastet werden könnten, sind die Leiterbahnen zu den Schraubklemmen zu dünn und sind mit maximal 2A belastbar. Um die volle Belastbarkeit erreichen, muss man an der Unterseite der Platine die Leiterbahnen von den Relaisanschlüssen zur Schraubklemme mit tauglichen Drähten überbrücken/verstärken. (siehe [raspiprojekt.de](https://raspiprojekt.de/kaufen/shop/bausaetze/wifi-relais-zweifach.html))
+~~Obwohl die Relais mit 10A belastet werden könnten, sind die Leiterbahnen zu den Schraubklemmen zu dünn und sind mit maximal 2A belastbar. Um die volle Belastbarkeit erreichen, muss man an der Unterseite der Platine die Leiterbahnen von den Relaisanschlüssen zur Schraubklemme mit tauglichen Drähten überbrücken/verstärken.~~ (siehe [raspiprojekt.de](https://raspiprojekt.de/kaufen/shop/bausaetze/wifi-relais-zweifach.html))
 
 ![10A Erweiterung](/pics/esp8266-10a.png?raw=true)
+
+![Achtung](/pics/achtung-yellow.png?raw=true) angepasst mit Version 2
 
 ## Erweiterungen/Ideen (ungetestet)
 
 ### Hardware
 
-- Sicherung (z.B. Reichelt *MINI FLINK 1,0A*) vor dem *HLK-PM01* - [Teardown](http://lygte-info.dk/review/Power%20Mains%20to%205V%200.6A%20Hi-Link%20HLK-PM01%20UK.html)
+- ~~Sicherung (z.B. Reichelt *MINI FLINK 1,0A*) vor dem *HLK-PM01* - [Teardown](http://lygte-info.dk/review/Power%20Mains%20to%205V%200.6A%20Hi-Link%20HLK-PM01%20UK.html)~~ umgesetzt mit Version 2
 - dahinter MOV (z.B. Reichelt *VDR-0,6 270*)
 - Reedkontakt (z.B. Reichelt *KSK 1A66*) als "unsichtbarer" Resetschalter
-- DS18B20 Temperatur Sensor
-- DHT22 (an **GPIO5** - Pin 1 angeschlossen)
+- ~~DS18B20 Temperatur Sensor~~  umgesetzt mit Version 2 (GPIO auf PIN Leiste)
+- ~~DHT22 (an **GPIO5** - Pin 1 angeschlossen)~~  umgesetzt mit Version 2 (GPIO auf PIN Leiste)
 ![Config-Page](/pics/dht22.jpg?raw=true)
 
 ### Software
