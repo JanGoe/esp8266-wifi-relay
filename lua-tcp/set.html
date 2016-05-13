@@ -1,68 +1,84 @@
+<!DOCTYPE html>
 <html>
-<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01//EN'>
 <head>
-<title>WiFi ESP8266 Manager</title>
-   <style media='screen' type='text/css'>
-        * {margin: 0; padding: 0;}
-        div {
-            position: absolute;
-            margin: auto;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            width: 320px;
-            height: 274px;
-        }
-        form {
-            width: 320px;
-            text-align: center;
-            position: relative;
-        }
-        form fieldset {
-            background: white;
-            border: 0 none;
-            border-radius: 5px;
-            box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
-            padding: 20px 30px;
-            box-sizing: border-box;
-        }
-        form input {
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            margin-bottom: 10px;
-            width: 100%;
-            box-sizing: border-box;
-            font-family: montserrat;
-            color: #2C3E50;
-            font-size: 13px;
-        }
-        form .action-button {
-            width: 100px;
-            background: #27AE60;
-            font-weight: bold;
-            color: white;
-            border: 0 none;
-            border-radius: 3px;
-            cursor: pointer;
-            padding: 10px 5px;
-            margin: 10px 5px;
-        }
-        form .action-button:hover, #msform .action-button:focus {
-            box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
-        }
-    </style>
+<title>ESP8266-12E Wi-Fi Setup</title>
+<style media='screen' type='text/css'>
+* {
+	margin: 0;
+	padding: 0;
+}
+
+div {
+	position: absolute;
+	margin: auto;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	width: 320px;
+	height: 274px;
+}
+
+form {
+	width: 320px;
+	text-align: center;
+	position: relative;
+}
+
+form fieldset {
+	background: white;
+	border: 0 none;
+	border-radius: 5px;
+	box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+	padding: 20px 30px;
+	box-sizing: border-box;
+}
+
+form input {
+	padding: 15px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	margin-bottom: 10px;
+	width: 100%;
+	box-sizing: border-box;
+	font-family: montserrat;
+	color: #2C3E50;
+	font-size: 13px;
+}
+
+form .action-button {
+	width: 100px;
+	background: #27AE60;
+	font-weight: bold;
+	color: white;
+	border: 0 none;
+	border-radius: 3px;
+	cursor: pointer;
+	padding: 10px 5px;
+	margin: 10px 5px;
+}
+
+form .action-button:hover, #msform .action-button:focus {
+	box-shadow: 0 0 0 2px white, 0 0 0 3px #27AE60;
+}
+</style>
 </head>
 <body bgcolor='#E6E6E6'>
-<div>
-<h2><font face="Arial">ESP8266-ESP12e Wifi Setup</h2>
-<hr><br>
-<form>
-<input type="text" name="ssid"  placeholder="SSID"><br>
-<input type="text" name="pwd"  placeholder="Password"><br>
-<input type="Submit" name="senden" value="Speichern"><br><br><br>
-<font size="2" color="red">Achtung "Speichern" Startet den Chip<br> direkt mit den eingegeben WLan Daten neu!</font><br>
-<hr><br>
-</div>
+	<div>
+		<h2>
+			<font face="Arial">ESP8266-12E Wi-Fi Setup</font>
+		</h2>
+		<hr>
+		<br>
+		<form>
+			<input type="text" name="ssid" placeholder="SSID"> <br>
+			<input type="password" name="pwd" placeholder="Passwort"><br>
+			<input type="Submit" name="senden" value="Speichern"><br>
+			<font size="2" color="red">Achtung: "Speichern" startet den
+				Chip <br> direkt mit den eingegebenen WLAN Daten neu!
+			</font> <br>
+			<hr>
+			<br>
+		</form>
+	</div>
 </html>

@@ -216,17 +216,17 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 
 ### GPIO Mapping
 
-| GPIO  | PIN | [IO index](https://github.com/nodemcu/nodemcu-firmware/wiki/nodemcu_api_en#gpio-new-table--build-20141219-and-later) | Bemerkung |
+| GPIO  | PIN | [IO index](https://nodemcu.readthedocs.io/en/dev/en/modules/gpio/) | Bemerkung |
 | ------------- | ------------- | ------------- | ------------- |
 | GPIO0 | 18 | 3 | Flashmodus (wenn auf GND) (DS18D20 - ungetestet) |
 | GPIO1 | 22 | 10 | UART TX|
 | GPIO2 | 17 | 4 | Relais 1 / LED (blau) |
 | GPIO3 | 21 | 9 | UART RX |
 | GPIO4 | 19 | 2 | *frei* |
-| GPIO5 | 20 | 1 | Relais 2 (oder DHT22) |
+| GPIO5 | 20 | 1 | *frei* |
 | GPIO12 | 6 | 6 | Schalter/Taster 1 |
 | GPIO13 | 7 | 7 | Schalter/Taster 2 |
-| GPIO14 | 5 | 5 | *frei* |
+| GPIO14 | 5 | 5 | Relais 2 |
 | GPIO15 | 16 | 8 | *frei* |
 | GPIO16 | 4 | 0 | sollte nicht genutzt werden (wird für Deep Sleep Mode verwendet) |
 
