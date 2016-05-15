@@ -29,7 +29,7 @@
 
 ### Quick Setup
 
-A) Beim ersten Start des ESP8266-Wifi-Relay wird ein **HOTSPOT** (nach ca. 10 Sekunden leuchtet die Blaue LED am ESP8266 3x kurz / das Relais schaltet 3x) mit der SSID: **RelaySetup** erstellt. Sobald man mit diesem Hotspot verbunden ist, kann man auf `http://192.168.4.1/set` die Zugangsdaten des eigenen WLAN-Netzes eingeben. Nach dem Speichern der Daten, startet der ESP8266 neu und versucht sich zu verbinden. Im Fehlerfall (WLAN nicht erreichbar, Zugangsdaten falsch) beginnt das ESP8266-Wifi-Relay wieder bei Schritt **A)**
+A) Beim ersten Start des ESP8266-Wifi-Relay wird ein **HOTSPOT** (nach ca. 10 Sekunden leuchtet die Blaue LED am ESP8266 3x kurz / das Relais schaltet 3x) mit der SSID: **RelaySetup** erstellt. Sobald man mit diesem Hotspot verbunden ist, kann man auf `http://192.168.4.1/` die Zugangsdaten des eigenen WLAN-Netzes eingeben. Nach dem Speichern der Daten, startet der ESP8266 neu und versucht sich zu verbinden. Im Fehlerfall (WLAN nicht erreichbar, Zugangsdaten falsch) beginnt das ESP8266-Wifi-Relay wieder bei Schritt **A)**
 
 Sofern alles geklappt hat, startet der TCP-Server auf Port 9274 und es können Befehle ausführt werden (z.b. Dateien auf den ESP8266 übertragen - siehe Befehls-Tabelle weiter unten)
 
@@ -40,9 +40,9 @@ Sofern alles geklappt hat, startet der TCP-Server auf Port 9274 und es können B
 
 Als ersten Schritt **GND**, **RX**, **TX** mit einem [TTL-USB Adapter](http://www.elecfreaks.com/wiki/index.php?title=USB_to_RS232_Converter) (**Achtung**: 3.3 Volt Pegel, bei 5 Volt muss ein [Pegelwandler](https://www.mikrocontroller.net/articles/Pegelwandler) "Levelshifter" verwendet werden) verbinden. **RX** wird mit **TX** verbunden und **TX** mit **RX**. Dann **L**, **N** anschließen (siehe Anschlussplan).
 
-Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und die blaue LED kurz aufblinken. Jetzt habt ihr die Möglichkeit die eigentliche Steuerungs-Software ([aktor.lua](/lua-tcp/aktor.lua)) auf dem ESP8266 zu übertragen.
+Sobald Netz-Spannung anliegt, sollte der ESP8266 auf der Rückseite der Platine starten und die blaue LED kurz aufblinken. Jetzt habt ihr die Möglichkeit die eigentliche Steuerungs-Software ([actuator.lua](/lua-tcp/actuator.lua)) auf dem ESP8266 zu übertragen.
 
-Dazu bitte die [aktor.lua](/lua-tcp/aktor.lua) öffen, die WLAN Daten anpassen und die Datei mit dem [ESPlorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren (über *Save* im ESPlorer). Nach dem erfolgreichen Übertragen, wird automatisch der TCP-Server gestartet und es wird die IP vom ESP8266 angezeigt (rechtes Fenster).
+Dazu bitte die [actuator.lua](/lua-tcp/actuator.lua) öffen, die WLAN Daten anpassen und die Datei mit dem [ESPlorer](http://esp8266.ru/esplorer/) auf den ESP8266 kopieren (über *Save* im ESPlorer). Nach dem erfolgreichen Übertragen, wird automatisch der TCP-Server gestartet und es wird die IP vom ESP8266 angezeigt (rechtes Fenster).
 
 ![ESPlorer](/pics/esplorer.png?raw=true)
 
@@ -50,13 +50,13 @@ Dazu bitte die [aktor.lua](/lua-tcp/aktor.lua) öffen, die WLAN Daten anpassen u
 
 Um aus der "Ferne" die Relais zu steuern, hat man die Möglichkeit in [SHC](http://rpi-controlcenter.de/) einen Schalterserver einzutragen mit der IP des ESP8266-Wifi-Relay und Port 9274 ( GPIO lesen JA, GPIO schreiben JA - geeignetes Model z.B. Arduino Nano ) 
 
-Nun kann man unter *Schaltfunktionen* Ausgänge anlegen ( als Schalterserver den neu erstellen auswählen und als **GPIO4/5** )  
+Nun kann man unter *Schaltfunktionen* Ausgänge anlegen ( als Schalterserver den neu erstellten auswählen und als **GPIO4/5** )  
 
 
-Damit in SHC auch die Rückmeldung funktioniert, wenn manuel schaltet geschaltet wird, muss in der [aktor.lua](/lua-tcp/aktor.lua) noch folgendes angepasst werden:
-- In Zeile 8 bitte platform="SHC"
-- In Zeile 28 und 30 bitte die IP eintragen unter der **SHC** erreichbar ist
-- In Zeile 4,5 bitte **SID** anpassen  ( die SID findet ihr. wenn ihr euch mit Putty einloggt, in das Verzeichnis `/var/www/shc` geht und dort ein `php index.php app=shc -sw –l` eingebt. Nun wird euch eine Liste mit allen schaltbaren Elementen angezeigt, die SID jetzt bitte im [init.lua](/lua-tcp/init.lua) anpassen
+Damit in SHC auch die Rückmeldung funktioniert, wenn manuell geschaltet wird, muss in der [actuator.lua](/lua-tcp/actuator.lua) noch folgendes angepasst werden:
+- In der Funktion `send_to_visu` bitte PLATFORM = "SHC" setzen
+- Bei HOST bitte die IP eintragen unter der **SHC** erreichbar ist
+- Bei den "user defined options" (ganz oben) die **RELAY_SIDs** anpassen (die SID findet ihr. wenn ihr euch mit Putty einloggt, in das Verzeichnis `/var/www/shc` geht und dort ein `php index.php app=shc -sw –l` eingebt. Nun wird euch eine Liste mit allen schaltbaren Elementen angezeigt. Die SIDs jetzt bitte anpassen.)
 
 ## MQTT
 
@@ -66,60 +66,72 @@ Das ESP8266-Wifi-Relay lässt sich auch via [MQTT](https://primalcortex.wordpres
 
 Um das ESP8266-Wifi-Relay via Pimatic anzusteuern, ist folgende anpassung erforderlich:
 
-- Ändert in der [aktor.lua](/lua-tcp/aktor.lua) Zeile 1 - 45 wiefolgt ab:
+- Ändert in der [actuator.lua](/lua-tcp/actuator.lua) folgende Zeilen ab:
 
 ```
 -- pimatic-edition 02.02.2016
-version = "0.3.2.pimatic"
-verriegelung = 0 -- 0 = inaktiv 1=aktiv
-sid1 = "Licht_Arbeitszimmer"
-sid2 = "Schlafzimmer_Lampe1"
-PimaticServer = "192.168.8.200"
-BaseLoginPimatic = "YWRtaW46YzRqc2luOGQ="
+ACTUATOR_VERSION = "0.4.0.pimatic"
+
+-- user defined options
+RELAY1_SID = "Licht_Arbeitszimmer"
+RELAY1_SID = "Schlafzimmer_Lampe1"
+
 
 -----------------------------------------------
 function send_to_visu(sid, cmd)
-  platform = "Pimatic"
-
-  if (platform == "Pimatic") then
-    if (cmd == 1) then switch="true" elseif (cmd == 0) then switch="false" end
-      port = 80
-      link = "/api/device/"..sid.."/changeStateTo?state="..switch..""
+  local PLATFORM = "Pimatic"
+  local HOST = "192.168.8.200"
+  local port = 80
+  local link = ""
+  local BASE_LOGIN_PIMATIC = "YWRtaW46YzRqc2luOGQ="
+  if (PLATFORM == "Pimatic") then
+    local switch
+    if (cmd == 1) then
+      switch = "true"
+    elseif (cmd == 0) then
+      switch = "false"
     end
-
-  if (platform == "Openhab") then
-    if (cmd == 1) then switch="ON" elseif (cmd == 0) then switch="OFF" end
-      port = 8080
-      link = "/CMD?" ..sid.."=" ..switch
+    port = 80
+    link = "/api/device/"..sid.."/changeStateTo?state="..switch..""
   end
 
-print(link)
+  if (PLATFORM == "Openhab") then
+    local switch
+    if (cmd == 1) then
+      switch = "ON"
+    elseif (cmd == 0) then
+      switch = "OFF"
+    end
+    port = 8080
+    link = "/CMD?" ..sid.."=" ..switch
+  end
+
+  print(link)
   
-    conn=net.createConnection(net.TCP, 0) 
-    conn:on("receive", function(conn, payload) print(payload) end )
-    conn:send("GET "..link.." HTTP/1.1\r\n")
-    conn:send("Authorization: Basic "..BaseLoginPimatic.."\r\n")
-    conn:send("Host: "..PimaticServer.."\r\n")
-    conn:send("Content-Type:application/json\r\n")
-    conn:send("Connection: close\r\n")
-    conn:send("Accept: */*\r\n\r\n")  
-    conn:on("receive", function(conn, payload)
-    print('Retrieved in '..((tmr.now()-t)/1000)..' milliseconds.\n')
+  local conn = net.createConnection(net.TCP, 0) 
+  conn:send("GET "..link.." HTTP/1.1\r\n")
+  conn:send("Authorization: Basic "..BASE_LOGIN_PIMATIC.."\r\n")
+  conn:send("Host: "..HOST.."\r\n")
+  conn:send("Content-Type:application/json\r\n")
+  conn:send("Connection: close\r\n")
+  conn:send("Accept: */*\r\n\r\n")
+  time_before = tmr.now()  
+  conn:on("receive", function(conn, payload)
+    print('Retrieved in '..((tmr.now()-time_before)/1000)..' milliseconds.\n')
     --print(payload)
     conn:close()
-    end) 
-    t = tmr.now()
+  end) 
     
-    conn:connect(port,PimaticServer)
+  conn:connect(port, HOST)
 
 end
 -----------------------------------------------
 ```
 
-- Konfiguriert nun folgede Zeilen und Speichert die aktor.lua auf dem ESP8266:
-  - sid1               -- device-id des Pimatic-Schalters, der Relais 1 schalten soll
-  - sid2               -- (falls vorhanden) device-id des Pimatic-Schalters, der Relais 2 schalten soll
-  - PimaticServer      -- IP eures Pimatic-Servers
+- Konfiguriert nun folgede Zeilen und Speichert die actuator.lua auf dem ESP8266:
+  - RELAY1_SID         -- device-id des Pimatic-Schalters, der Relais 1 schalten soll
+  - RELAY2_SID         -- (falls vorhanden) device-id des Pimatic-Schalters, der Relais 2 schalten soll
+  - HOST               -- IP eures Pimatic-Servers
   - BaseLoginPimatic   -- Base64-codierter String des Loginschemas "user:passwort" -> Um die Base64Login-Daten zu erhalten, gebt eure Loginschema auf https://www.base64encode.org/ ein und drückt "encode"
  
 - Kopiert nun die tcp.php auf euer RaspberryPi (hier im Beispiel /home/pi/tcp.php) z.b. mit  ```wget https://raw.githubusercontent.com/JanGoe/esp8266-wifi-relay/master/tcp.php```
@@ -163,7 +175,7 @@ Wollt ihr an der Platine einen Taster/Schalter anschliesen, bitte dafür **GND /
 ## Alternative Steuerungen
 
 Wer die Platine nicht mit SHC betreiben möchte, kann diese natürlich auch über einfache TCP Befehle steuern.
-Wer die Relais gegeneinandere verriegeln möchte bitte in der [aktor.lua](/lua-tcp/aktor.lua) zeile 3 `verriegelung = 1 ` damit kann immer nur 1 relais geöffnet sein
+Wer die Relais gegeneinander verriegeln möchte, bitte in der [actuator.lua](/lua-tcp/actuator.lua) `INTERLOCK_ENABLED = true` setzen, damit kann immer nur 1 Relais geöffnet sein.
 
 ### PHP Script ([tcp.php](/tcp.php))
 
@@ -175,8 +187,8 @@ Wer die Relais gegeneinandere verriegeln möchte bitte in der [aktor.lua](/lua-t
 | `php tcp.php 192.168.0.62 2x5x0` | Dieses Kommando schaltet **Relais 2** auf **AUS** | |
 | `php tcp.php 192.168.0.62 3x4` | Status vom **Relais 1** abfragen | `1/0` |
 | `php tcp.php 192.168.0.62 3x5` | Status vom **Relais 2** abfragen | `1/0` |
-| `php tcp.php 192.168.0.62 4x1`  | DHT22 Daten abfragen | Temp;Luftfeuchte |
-| `php tcp.php 192.168.0.62 9x0` | Version abfragen | 0.3.2 |
+| `php tcp.php 192.168.0.62 4x1`  | DHT22 Daten von Pin 1 abfragen | Temp;Luftfeuchte |
+| `php tcp.php 192.168.0.62 9x0` | Version abfragen | 0.4.0 |
 | `php tcp.php 192.168.0.62 0x0` | ESP8266 neustarten | |
 | `php tcp.php 192.168.0.62 update datei.lua` | Datei 'datei.lua' hochladen und ESP8266neu starten | | 
 
@@ -184,7 +196,7 @@ Wer die Relais gegeneinandere verriegeln möchte bitte in der [aktor.lua](/lua-t
 
 ### HTTP Rückmeldung
 
-Möchte man Rückmeldungen vom manuellen Schalten auswerten geht dieses via HTTP ( der ESP8266 sendet einen HTTP-GET-REQUEST an eine gewünschte Seite - dazu bitte die Zeilen ([aktor.lua](/lua-tcp/aktor.lua)) 4,5,8,11,12,17,18 anpassen.
+Möchte man Rückmeldungen vom manuellen Schalten auswerten geht dieses via HTTP ( der ESP8266 sendet einen HTTP-GET-REQUEST an eine gewünschte Seite - dazu bitte die Funktion `send_to_visu` in der ([actuator.lua](/lua-tcp/actuator.lua)) anpassen.
 
 ### OpenHab
 
@@ -198,11 +210,11 @@ Switch Schalter "Lampe1" {exec=">[ON:php /var/www/tcp.php 192.168.0.62 2x3x1] >[
 
 *192.168.0.62 ist im obigen Beispiel die IP Adresse des ESP8266*
 
-Für Rückmeldungen in Openhab bitte in der [aktor.lua](/lua-tcp/aktor.lua) folgende zeilen anpassen:
-- in Zeile 8 platform="Openhab"
-- in zeile 28,30 die ip unter der openhab erreichbar ist
-- in zeile 17 ggf den Port anpassen
-- in zeile 4,5 die namen der Items die aktualisiert werden sollen
+Für Rückmeldungen in Openhab bitte in der [actuator.lua](/lua-tcp/actuator.lua) folgende Zeilen anpassen:
+- In der Funktion `send_to_visu` PLATFORM = "Openhab" setzen
+- IP unter der openhab erreichbar ist
+- ggf. den Port anpassen
+- Bei den "user defined options" (ganz oben) die **RELAY_SIDs** anpassen auf die Namen der Items die aktualisiert werden sollen
 
 
 Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https://openhabdoc.readthedocs.org/de/latest/Beispiel/).
@@ -211,8 +223,8 @@ Weitere Informationen über OpenHab findet sich in den [Ersten Schritten](https:
 
 ### Stromverbrauch
 
-- Version 2 - NC Version: zwischen 0.6 (Standby) und 1.2 Watt
-- Version 2 - NO Version: zwischen 0.3 (Standby) und 1.2 Watt
+- Version 2 - NC Version (Standardversion): zwischen 0.6 (Standby) und 1.2 Watt
+- Version 2 - NO Version (Spezialversion): zwischen 0.3 (Standby) und 1.2 Watt
 
 ### GPIO Mapping
 
