@@ -1,7 +1,7 @@
 -- constants
 ACTUATOR_VERSION = "0.4.1"
 TMR_ACTUATOR_ID = 0
-TMR_ACTUATOR_INTERVAL_IN_MS = 1000
+TMR_ACTUATOR_INTERVAL_IN_MS = 150
 TMR_RELAY1_DELAY_ID = 6
 TMR_RELAY2_DELAY_ID = 5
 RELAY_STATE_OFF = 0
@@ -10,7 +10,7 @@ SWITCH_STATE_CLOSED = gpio.LOW -- is 0
 SWITCH_STATE_OPEN = gpio.HIGH -- is 1
 
 -- user defined options
-INTERLOCK_ENABLED = true -- if active, only one relay can be on at the same time
+INTERLOCK_ENABLED = false -- if active, only one relay can be on at the same time
 DELAY_TIMER_ENABLED = false -- timer to switch off relays after a specified time
 RELAY1_DELAY_TIME_IN_SEC = 10 -- delay time to switch off in seconds for relay 1
 RELAY2_DELAY_TIME_IN_SEC = 10 -- delay time to switch off in seconds for relay 2
@@ -35,10 +35,7 @@ switch1_prev_state = SWITCH_STATE_OPEN
 switch2_prev_state = SWITCH_STATE_OPEN
 
 --splunk related
-splunk_log=true                    --true if you want to use splunk
-splunk_host="spunkIP"       --ip of splunk server
-splunk_port=8088                   --port of http input
-splunk_token="http input token"  --token of http input
+SPLUNK_LOG=false                    --true if you want to use splunk
 
 -----------------------------------------------
 function relay1_switchOff()
@@ -58,7 +55,10 @@ function relay2_switchOn()
 end
 
 function log2Splunk(lvl, message)
-    if (splunk_log) then
+    splunk_host="spunkIP"       --ip of splunk server
+    splunk_port=8088                   --port of http input
+    splunk_token="http input token"  --token of http input
+    if (SPLUNK_LOG) then
         conn=net.createConnection(net.TCP, 0) 
         -- show the retrieved web page
         conn:on("receive", function(conn, payload) conn:close() end )
