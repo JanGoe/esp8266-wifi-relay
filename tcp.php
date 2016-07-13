@@ -18,7 +18,7 @@ $chipIP = $ip;
 if($was == "update")
 {
 ################################################################################
-#$filename = "filebin/$filename";  //adds filebin/ for file IO
+//$filename = "filebin/$filename";  //adds filebin/ for file IO
 $out = file($filename);           // reads file into Array $out   
 $filelines = count($out);			//  Number of lines in array
 $header = "newfile";				//newfile indicates this is first part of file string.
@@ -26,7 +26,10 @@ $header = "newfile";				//newfile indicates this is first part of file string.
 $filesize = 0;						//rests vars
 $x=0; 
 $header = "**command**Newfile**\n";   //  headeer defaults to this  changed if looped to more data
-$filenametoESP = substr($filename,8,20)."\n";      // strips filebin
+//$filenametoESP = substr($filename,8,20)."\n";      // strips filebin
+$filenametoESP = $filename."\n";
+echo "filenametoESP: $filenametoESP\n";
+
 $datatoESP = "";
 	echo trim($filenametoESP);
 	echo " Sent to ESP.";
