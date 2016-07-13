@@ -14,8 +14,8 @@ INTERLOCK_ENABLED = true -- if active, only one relay can be on at the same time
 DELAY_TIMER_ENABLED = false -- timer to switch off relays after a specified time
 RELAY1_DELAY_TIME_IN_SEC = 10 -- delay time to switch off in seconds for relay 1
 RELAY2_DELAY_TIME_IN_SEC = 10 -- delay time to switch off in seconds for relay 2
-RELAY1_SID = "Test_Light1" -- openhab itemname / shc sid of item
-RELAY2_SID = "Test_Light2" -- openhab itemname / shc sid of item
+RELAY1_SID = "itemname" -- openhab itemname / shc sid of item
+RELAY2_SID = "itemname" -- openhab itemname / shc sid of item
 
 -- config gpios
 RELAY1_PIN = 4 -- GPIO2
@@ -36,9 +36,9 @@ switch2_prev_state = SWITCH_STATE_OPEN
 
 --splunk related
 splunk_log=true                    --true if you want to use splunk
-splunk_host="ipSplunk"       --ip of splunk server
+splunk_host="spunkIP"       --ip of splunk server
 splunk_port=8088                   --port of http input
-splunk_token="tokenString"  --token of http input
+splunk_token="http input token"  --token of http input
 
 -----------------------------------------------
 function relay1_switchOff()
@@ -82,33 +82,30 @@ function log2Splunk(lvl, message)
 end
 
 function updateOpenhab(host, port, relay_sid,state)
-    log2Splunk("INFO","Updating openhab - relay_sid:"..relay_sid..",state:"..state)
-    time_before = tmr.now()
-
+    log2Splunk("INFO","Updating openhab, host:"..host..",port:"..port)
+    time_before  = tmr.now()
     conn=net.createConnection(net.TCP, 0) 
     -- show the retrieved web page
-      conn:on("receive", function(conn, payload)
-        log2Splunk("INFO","Retrieved in "..((tmr.now()-time_before)/1000).." milliseconds. payload: "..payload)
-        conn:close()
-      end)
+    conn:on("receive", function(conn, payload)
+    log2Splunk("INFO","Retrieved in "..((tmr.now()-time_before)/1000).." milliseconds. payload: "..payload)
+    conn:close()
+    end )
     -- when connected, request page (send parameters to a script)
     conn:on("connection", function(conn, payload) 
        post_length=string.len(state)
---     print(post_length)
---     print('\nConnected') 
        conn:send("PUT /rest/items/"..relay_sid.."/state HTTP/1.1\r\n"
         .."HOST: "..host..":"..port.."\r\n"
         .."content-length: "..post_length.."\r\n\r\n"
         ..""..state.."\"")
-       end) 
-                           
+       end)        
     -- when disconnected, let it be known
     conn:on("disconnection", function(conn, payload) end)
+    
     conn:connect(port,host) 
 end
 
 function send_to_visu(sid, cmd)
-  local HOST = "192.168.0.27"
+  local HOST = "ipofVisu"
   local PLATFORM = "Openhab" -- SHC or Openhab
   local link = ""
   local port=8080
