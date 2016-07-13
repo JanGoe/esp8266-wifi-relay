@@ -1,5 +1,5 @@
 -- constants
-ACTUATOR_VERSION = "0.4.0"
+ACTUATOR_VERSION = "0.4.1"
 TMR_ACTUATOR_ID = 0
 TMR_ACTUATOR_INTERVAL_IN_MS = 150
 TMR_RELAY1_DELAY_ID = 6
@@ -14,8 +14,8 @@ INTERLOCK_ENABLED = false -- if active, only one relay can be on at the same tim
 DELAY_TIMER_ENABLED = false -- timer to switch off relays after a specified time
 RELAY1_DELAY_TIME_IN_SEC = 10 -- delay time to switch off in seconds for relay 1
 RELAY2_DELAY_TIME_IN_SEC = 10 -- delay time to switch off in seconds for relay 2
-RELAY1_SID = "Test_Light1" -- openhab itemname / shc sid of item
-RELAY2_SID = "Test_Light2" -- openhab itemname / shc sid of item
+RELAY1_SID = "itemname" -- openhab itemname / shc sid of item
+RELAY2_SID = "itemname" -- openhab itemname / shc sid of item
 
 -- config gpios
 RELAY1_PIN = 4 -- GPIO2
@@ -34,6 +34,9 @@ tcp_server_started = false -- tcp server needs to be started after ESP got an IP
 switch1_prev_state = SWITCH_STATE_OPEN
 switch2_prev_state = SWITCH_STATE_OPEN
 
+--splunk related
+SPLUNK_LOG=false                    --true if you want to use splunk
+
 -----------------------------------------------
 function relay1_switchOff()
   gpio.write(RELAY1_PIN, gpio.HIGH) -- NC version: HIGH is off
@@ -51,17 +54,82 @@ function relay2_switchOn()
   gpio.write(RELAY2_PIN, gpio.LOW) -- NC version: LOW is on
 end
 
+function log2Splunk(lvl, message)
+    splunk_host="spunkIP"       --ip of splunk server
+    splunk_port=8088                   --port of http input
+    splunk_token="http input token"  --token of http input
+    if (SPLUNK_LOG) then
+        conn=net.createConnection(net.TCP, 0) 
+        -- show the retrieved web page
+        conn:on("receive", function(conn, payload) conn:close() end )
+        
+        -- when connected, request page (send parameters to a script)
+        conn:on("connection", function(conn, payload)
+            post_length=string.len(message)
+            payload='{"host" : "'..wifi.sta.getip()
+            ..'", "event" : { "level" : "'..lvl..'","message" : "'..message..'" }}'
+            cLength=string.len(payload)
+            conn:send("POST /services/collector/event HTTP/1.1\r\n"
+            .."Authorization: Splunk "..splunk_token.."\r\n"
+            .."Content-Length: "..cLength.."\r\n\r\n"
+            ..payload)
+        end) 
+                           
+        conn:on("disconnection", function(conn, payload) end)
+        conn:connect(splunk_port,splunk_host) 
+    end
+    print(lvl.." - "..message)    
+end
+
+function updateOpenhab(host, port, relay_sid,state)
+    log2Splunk("INFO","Updating openhab, host:"..host..",port:"..port)
+    time_before  = tmr.now()
+    conn=net.createConnection(net.TCP, 0) 
+    -- show the retrieved web page
+    conn:on("receive", function(conn, payload)
+    log2Splunk("INFO","Retrieved in "..((tmr.now()-time_before)/1000).." milliseconds. payload: "..payload)
+    conn:close()
+    end )
+    -- when connected, request page (send parameters to a script)
+    conn:on("connection", function(conn, payload) 
+       post_length=string.len(state)
+       conn:send("PUT /rest/items/"..relay_sid.."/state HTTP/1.1\r\n"
+        .."HOST: "..host..":"..port.."\r\n"
+        .."content-length: "..post_length.."\r\n\r\n"
+        ..""..state.."\"")
+       end)        
+    -- when disconnected, let it be known
+    conn:on("disconnection", function(conn, payload) end)
+    
+    conn:connect(port,host) 
+end
+
 function send_to_visu(sid, cmd)
-  local HOST = "192.168.0.54"
+  local HOST = "ipofVisu"
   local PLATFORM = "Openhab" -- SHC or Openhab
-  local port = 80
   local link = ""
+  local port=8080
 
   if (PLATFORM == "SHC") then
-    port = 80
     link = "/shc/index.php?app=shc&a&ajax=executeswitchcommand&sid="..sid.."&command="..cmd
+    log2Splunk("INFO","using link: "..link)
+    local conn = net.createConnection(net.TCP, 0) -- 0 means unencrypted
+      conn:on("connection", function(conn, payload)
+        conn:send("GET "..link.. " "..
+          "Host: "..HOST.. "\r\n"..
+          "Accept: /\r\n"..
+          "User-Agent: Mozilla/4.0 (compatible; esp8266 Lua;)"..
+          "\r\n\r\n")
+      end)
+    
+      time_before = tmr.now()
+      conn:on("receive", function(conn, payload)
+        log2Splunk("INFO","Retrieved in "..((tmr.now()-time_before)/1000).." milliseconds. payload: "..payload)
+        conn:close()
+      end)
+      conn:connect(port, HOST)
   end
-
+  
   if (PLATFORM == "Openhab") then
     local switch
     if (cmd == 1) then
@@ -69,39 +137,20 @@ function send_to_visu(sid, cmd)
     elseif (cmd == 0) then
       switch = "OFF"
     end
-    port = 8080
-    link = "/CMD?" ..sid.."=" ..switch
+    updateOpenhab(HOST,port,sid,switch)
   end
 
-  print(link)
-
-  local conn = net.createConnection(net.TCP, 0) -- 0 means unencrypted
-  conn:on("connection", function(conn, payload)
-    conn:send("GET "..link.. " "..
-      "Host: "..HOST.. "\r\n"..
-      "Accept: /\r\n"..
-      "User-Agent: Mozilla/4.0 (compatible; esp8266 Lua;)"..
-      "\r\n\r\n")
-  end)
-
-  time_before = tmr.now()
-  conn:on("receive", function(conn, payload)
-    print('\nRetrieved in '..((tmr.now()-time_before)/1000)..' milliseconds.')
-    --print(payload)
-    conn:close()
-  end)
-
-  conn:connect(port, HOST)
 end
-
+  
 function read_temp(pin)
   local status, temp, humi, temp_dec, humi_dec = dht.read(pin)
   if (status == dht.OK) then
     print(temp.."|"..humi)
+    log2Splunk("INFO", "temp:"..temp..",humi:"..humi)
   elseif (status == dht.ERROR_CHECKSUM) then
-    print("DHT Checksum error.");
+    log2Splunk("ERROR","DHT Checksum error.");
   elseif (status == dht.ERROR_TIMEOUT) then
-    print("DHT timed out.");
+    log2Splunk("ERROR","DHT timed out.");
   end
   -- temp and humi are -999 when an error occurs
   return temp, humi
@@ -119,7 +168,7 @@ function start_tcp_server()
   local srv = net.createServer(net.TCP, TIMEOUT_IN_SEC)
   srv:listen(TCP_PORT, function(conn)
     conn:on("receive", function(conn, pl)
-      print(pl)
+
       -- split payload (string indices start at 1 in Lua)
       local command_type = tonumber(string.sub(pl, 1, 1))
       local pin = tonumber(string.sub(pl, 3, 3)) -- only single-digit pins!
@@ -128,7 +177,7 @@ function start_tcp_server()
         node.restart()
       elseif (command_type == CMD_SWITCH) then
         if (command == 1) then
-          print("cmd switch on")
+          log2Splunk("INFO","cmd switch on "..pl)
           if (pin == RELAY1_PIN) then
             relay1_state = 1
           end
@@ -137,7 +186,7 @@ function start_tcp_server()
           end
         end
         if (command == 0) then
-          print("cmd switch off")
+          log2Splunk("INFO","cmd switch off "..pl)
           if(pin == RELAY1_PIN) then
             relay1_state = RELAY_STATE_OFF
           end
@@ -147,7 +196,7 @@ function start_tcp_server()
         end
       elseif (command_type == CMD_STATUS) then
         conn:send(gpio.read(pin))
-        print("request pin "..pin.."| state = "..gpio.read(pin))
+        log2Splunk("INFO","request pin "..pin.."| state = "..gpio.read(pin))
       elseif (command_type == CMD_TEMP) then
         local temp, humi = read_temp(pin)
         conn:send(temp.."|"..humi)
@@ -188,6 +237,7 @@ tmr.alarm(TMR_ACTUATOR_ID, TMR_ACTUATOR_INTERVAL_IN_MS, tmr.ALARM_AUTO, function
     print("No IP yet!")
   elseif (tcp_server_started == false) then
     print("Running version "..ACTUATOR_VERSION)
+    log2Splunk("INFO","Running version "..ACTUATOR_VERSION)
     print(wifi.sta.getip())
     tcp_server_started = true
     start_tcp_server()
@@ -206,7 +256,7 @@ tmr.alarm(TMR_ACTUATOR_ID, TMR_ACTUATOR_INTERVAL_IN_MS, tmr.ALARM_AUTO, function
       relay1_state = RELAY_STATE_ON
       --print("relay1_state = 1")
       send_to_visu(RELAY1_SID, relay1_gpio_state)
-
+    
     elseif (relay1_state == RELAY_STATE_ON) then
       relay1_state = RELAY_STATE_OFF
       --print("relay1_state = 0")
