@@ -51,17 +51,55 @@ function relay2_switchOn()
   gpio.write(RELAY2_PIN, gpio.LOW) -- NC version: LOW is on
 end
 
+function updateOpenhab(host, port, relay_sid,state)
+    print("INFO","Updating openhab, host:"..host..",port:"..port.." with: /CMD?"..relay_sid.."="..state)
+    time_before  = tmr.now()
+    conn=net.createConnection(net.TCP, 0) 
+    -- show the retrieved web page
+    conn:on("receive", function(conn, payload)
+    print("INFO","Retrieved in "..((tmr.now()-time_before)/1000).." milliseconds. payload: "..payload)
+    conn:close()
+    end )
+    -- when connected, request page (send parameters to a script)
+    conn:on("connection", function(conn, payload) 
+       post_length=string.len(state)
+       conn:send("GET /CMD?"..relay_sid.."="..state.." HTTP/1.1\r\n"
+        .."HOST: "..host..":"..port.."\r\n"
+        .."content-length: "..post_length.."\r\n\r\n"
+        ..""..state.."\"")
+       end)        
+    -- when disconnected, let it be known
+    conn:on("disconnection", function(conn, payload) end)
+    
+    conn:connect(port,host) 
+end
+
 function send_to_visu(sid, cmd)
   local HOST = "192.168.0.54"
   local PLATFORM = "Openhab" -- SHC or Openhab
-  local port = 80
   local link = ""
+  local port=8080
 
   if (PLATFORM == "SHC") then
-    port = 80
     link = "/shc/index.php?app=shc&a&ajax=executeswitchcommand&sid="..sid.."&command="..cmd
+    print("INFO","using link: "..link)
+    local conn = net.createConnection(net.TCP, 0) -- 0 means unencrypted
+      conn:on("connection", function(conn, payload)
+        conn:send("GET "..link.. " "..
+          "Host: "..HOST.. "\r\n"..
+          "Accept: /\r\n"..
+          "User-Agent: Mozilla/4.0 (compatible; esp8266 Lua;)"..
+          "\r\n\r\n")
+      end)
+    
+      time_before = tmr.now()
+      conn:on("receive", function(conn, payload)
+        print("INFO","Retrieved in "..((tmr.now()-time_before)/1000).." milliseconds. payload: "..payload)
+        conn:close()
+      end)
+      conn:connect(port, HOST)
   end
-
+  
   if (PLATFORM == "Openhab") then
     local switch
     if (cmd == 1) then
@@ -69,29 +107,9 @@ function send_to_visu(sid, cmd)
     elseif (cmd == 0) then
       switch = "OFF"
     end
-    port = 8080
-    link = "/CMD?" ..sid.."=" ..switch
+    updateOpenhab(HOST,port,sid,switch)
   end
 
-  print(link)
-
-  local conn = net.createConnection(net.TCP, 0) -- 0 means unencrypted
-  conn:on("connection", function(conn, payload)
-    conn:send("GET "..link.. " "..
-      "Host: "..HOST.. "\r\n"..
-      "Accept: /\r\n"..
-      "User-Agent: Mozilla/4.0 (compatible; esp8266 Lua;)"..
-      "\r\n\r\n")
-  end)
-
-  time_before = tmr.now()
-  conn:on("receive", function(conn, payload)
-    print('\nRetrieved in '..((tmr.now()-time_before)/1000)..' milliseconds.')
-    --print(payload)
-    conn:close()
-  end)
-
-  conn:connect(port, HOST)
 end
 
 function read_temp(pin)
