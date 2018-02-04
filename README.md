@@ -17,7 +17,7 @@
 - WLAN steuerbares 2-Port Relais / oder nur mit 1 Relais bestückt
 - optionale Schalter/Taster Unterstützung (inkl. Feedback)
 - Firmware: [NodeMCU](https://github.com/nodemcu/nodemcu-firmware/blob/master/README.md) 
-- Bestellung über [eBay](http://www.ebay.de/itm/-/322470034516?) in verschienden Varianten oder per [Mail](mailto:jan.andrea7@googlemail.com) Nur noch V.2 Verfügbar  / mit 1 relay 18,99€ mit 2 relay 22,49€ ab 10 stück rabatt möglich!
+- Bestellung per [Mail](mailto:jan.andrea7@googlemail.com) Nur noch V.2 Verfügbar  / zurzeit nur noch als Bausatz verfügbar
  
 ## Installation
 
