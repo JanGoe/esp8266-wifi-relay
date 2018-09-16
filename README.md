@@ -17,7 +17,7 @@
 - WLAN steuerbares 2-Port Relais / oder nur mit 1 Relais bestückt
 - optionale Schalter/Taster Unterstützung (inkl. Feedback)
 - Firmware: [NodeMCU](https://github.com/nodemcu/nodemcu-firmware/blob/master/README.md) 
-- Bestellung per [Mail](mailto:jan.andrea7@googlemail.com) Nur noch V.2 Verfügbar  / zurzeit nur noch als Bausatz verfügbar
+- Bestellung per [Mail](mailto:jan.andrea7@googlemail.com) Nur noch V.2 Verfügbar  / @16.09.2018 zurzeit wieder 15 Platinen mit allen teilen verfügbar
  
 ## Installation
 
